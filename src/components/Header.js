@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import contextProvider from '../context/contextProvider';
 
 function Header() {
+  const { title } = useContext(contextProvider);
   return (
     <>
-      <h1 datatest-id="page-title">Oi</h1>
+      <h1 datatest-id="page-title">{title}</h1>
       <img
         data-testid="profile-top-btn"
         src="src/images/profileIcon.svg"
@@ -12,7 +14,7 @@ function Header() {
       <img
         data-testid="search-top-btn"
         src="src/images/searchIcon.svg"
-        alt="Profile Icon"
+        alt="Search Icon"
       />
 
     </>
