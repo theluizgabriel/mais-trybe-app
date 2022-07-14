@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import globalContext from './globalContext';
-import useCustonHook from '../hook/useCustonHook';
+import useCustomHook from '../hook/useCustomHook';
 
 function GlobalProvider({ children }) {
-  const { title, setTitle } = useCustonHook();
+  const { title,
+    setTitle,
+    showSearch,
+    setShowSearch } = useCustomHook();
   const value = {
-    title, setTitle,
+    title,
+    setTitle,
+    showSearch,
+    setShowSearch,
   };
   return (
-    <globalContext.Provider value={ { value } }>
+    <globalContext.Provider value={ value }>
       {children}
     </globalContext.Provider>
   );

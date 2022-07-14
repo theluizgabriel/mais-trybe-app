@@ -1,11 +1,17 @@
 import React, { useEffect, useContext } from 'react';
-import contextProvider from '../context/contextProvider';
+import globalContext from '../context/globalContext';
+import Header from './Header';
 
 function Foods() {
-  const { setTitle } = useContext(contextProvider);
-  useEffect(() => { setTitle('Foods'); }, []);
+  const { setTitle, setShowSearch } = useContext(globalContext);
+
+  useEffect(() => {
+    setTitle('Foods');
+    setShowSearch(true);
+  });
+
   return (
-    <div>Foods</div>
+    <Header />
   );
 }
 

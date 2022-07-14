@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
-import contextProvider from '../context/contextProvider';
+import globalContext from '../context/globalContext';
 
 function Login() {
-  const { setTitle } = useContext(contextProvider);
+  const { setTitle } = useContext(globalContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
 
   const history = useHistory();
 
-  useEffect(() => { setTitle('Login'); }, []);
+  useEffect(() => { setTitle('Login'); });
 
   const buttonValidation = () => {
     const minPasswordLength = 6;

@@ -1,10 +1,15 @@
 import React, { useEffect, useContext } from 'react';
 import Header from './Header';
-import contextProvider from '../context/contextProvider';
+import globalContext from '../context/globalContext';
 
 function ReceitasFavoritas() {
-  const { setTitle } = useContext(contextProvider);
-  useEffect(() => { setTitle('Receitas Favoritas'); }, []);
+  const { setTitle, setShowSearch } = useContext(globalContext);
+
+  useEffect(() => {
+    setTitle('Favorite Recipes');
+    setShowSearch(false);
+  });
+
   return (
     <>
       <Header />

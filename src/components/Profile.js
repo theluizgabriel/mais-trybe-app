@@ -1,11 +1,17 @@
 import React, { useEffect, useContext } from 'react';
-import contextProvider from '../context/contextProvider';
+import globalContext from '../context/globalContext';
+import Header from './Header';
 
 function Profile() {
-  const { setTitle } = useContext(contextProvider);
-  useEffect(() => { setTitle('Profile'); }, []);
+  const { setTitle, setShowSearch } = useContext(globalContext);
+
+  useEffect(() => {
+    setTitle('Profile');
+    setShowSearch(false);
+  });
+
   return (
-    <div>Profile</div>
+    <Header />
   );
 }
 
