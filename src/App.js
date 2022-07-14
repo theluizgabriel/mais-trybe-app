@@ -9,6 +9,9 @@ import GlobalProvider from './context/contextProvider';
 function App() {
   return (
     <GlobalProvider>
+      <Switch>
+        <Route exact path="/" component={ Login } />
+      </Switch>
       <div className="meals">
         <span className="logo">TRYBE</span>
         <object
