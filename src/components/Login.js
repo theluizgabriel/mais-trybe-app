@@ -4,7 +4,7 @@ import globalContext from '../context/globalContext';
 
 function Login() {
   const { setTitle } = useContext(globalContext);
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
@@ -12,7 +12,7 @@ function Login() {
   const history = useHistory();
 
   useEffect(() => { setTitle('Login'); });
-  
+
   const buttonValidation = () => {
     const minPasswordLength = 6;
     const emailRegex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
@@ -39,8 +39,12 @@ function Login() {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    const user = `email: ${email}`;
-    localStorage.setItem('user', user);
+    const user = {
+      email,
+    };
+    const stringfyUser = JSON.stringify(user);
+    console.log(stringfyUser);
+    localStorage.setItem('user', stringfyUser);
     localStorage.setItem('mealsToken', 1);
     localStorage.setItem('cocktailsToken', 1);
     history.push('/foods');
