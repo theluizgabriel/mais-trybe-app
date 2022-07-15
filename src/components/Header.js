@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
+import SearchBar from './SearchBar';
 
 function Header() {
   const { title, showSearch } = useContext(globalContext);
@@ -45,7 +46,7 @@ function Header() {
           />
 
         </button>)}
-      {searchBar && <input type="text" data-testid="search-input" />}
+      {searchBar && <SearchBar />}
 
     </div>
   );
