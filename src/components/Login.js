@@ -56,6 +56,7 @@ function Login() {
         name="email"
         type="email"
         data-testid="email-input"
+        placeholder="exemplo@exemplo.com"
         value={ email }
         onChange={ handleChange }
       />
@@ -63,6 +64,7 @@ function Login() {
         name="password"
         type="password"
         data-testid="password-input"
+        placeholder="Digite sua senha"
         value={ password }
         onChange={ handleChange }
       />

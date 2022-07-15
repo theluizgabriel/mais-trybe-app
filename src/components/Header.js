@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import SearchBar from './SearchBar';
+import searchIcon from '../images/searchIcon.svg';
+import profileIcon from '../images/profileIcon.svg';
 
 function Header() {
   const { title, showSearch } = useContext(globalContext);
@@ -29,7 +31,7 @@ function Header() {
       <button type="button" onClick={ () => { history.push('/profile'); } }>
         <img
           data-testid="profile-top-btn"
-          src="../images/profileIcon.svg"
+          src={ profileIcon }
           alt="Profile Icon"
         />
       </button>
@@ -41,7 +43,7 @@ function Header() {
         >
           <img
             data-testid="search-top-btn"
-            src="../images/searchIcon.svg"
+            src={ searchIcon }
             alt="Search Icon"
           />
 
