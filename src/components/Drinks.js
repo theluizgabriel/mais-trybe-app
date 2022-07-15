@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import globalContext from '../context/globalContext';
+import CardsDrinks from './CardsDrinks';
 import Header from './Header';
 
 function Drinks() {
@@ -11,7 +12,10 @@ function Drinks() {
   });
 
   return (
-    <Header />
+    <>
+      <Header />
+      <CardsDrinks />
+    </>
   );
 }
 

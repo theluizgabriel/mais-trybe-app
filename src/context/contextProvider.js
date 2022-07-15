@@ -7,12 +7,20 @@ function GlobalProvider({ children }) {
   const { title,
     setTitle,
     showSearch,
-    setShowSearch } = useCustomHook();
+    setShowSearch,
+    dataFoods,
+    setDataFoods,
+    dataDrinks,
+    setDataDrinks } = useCustomHook();
   const value = {
     title,
     setTitle,
     showSearch,
     setShowSearch,
+    dataFoods,
+    setDataFoods,
+    dataDrinks,
+    setDataDrinks,
   };
   return (
     <globalContext.Provider value={ value }>
