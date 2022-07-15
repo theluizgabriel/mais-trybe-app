@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
+import globalContext from '../context/globalContext';
 
 function Login() {
+  const { setTitle } = useContext(globalContext);
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(true);
 
   const history = useHistory();
 
+  useEffect(() => { setTitle('Login'); });
+  
   const buttonValidation = () => {
     const minPasswordLength = 6;
     const emailRegex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
