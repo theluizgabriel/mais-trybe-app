@@ -1,13 +1,13 @@
 import React, { useEffect, useContext } from 'react';
 import globalContext from '../context/globalContext';
-import Header from './Header';
+import Header from '../components/Header';
 
-function ReceitasFeitas() {
+function Drinks() {
   const { setTitle, setShowSearch } = useContext(globalContext);
 
   useEffect(() => {
-    setTitle('Done Recipes');
-    setShowSearch(false);
+    setTitle('Drinks');
+    setShowSearch(true);
   });
 
   return (
@@ -15,4 +15,4 @@ function ReceitasFeitas() {
   );
 }
 
-export default ReceitasFeitas;
+export default Drinks;

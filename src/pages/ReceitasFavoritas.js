@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import Header from './Header';
+import Header from '../components/Header';
 import globalContext from '../context/globalContext';
 
 function ReceitasFavoritas() {
