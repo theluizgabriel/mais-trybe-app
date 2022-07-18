@@ -5,6 +5,7 @@ const useCustomHook = () => {
   const [showSearch, setShowSearch] = useState(true);
   const [dataFoods, setDataFoods] = useState([]);
   const [dataDrinks, setDataDrinks] = useState([]);
+  const [mealID, setMealID] = useState('');
   return { title,
     setTitle,
     showSearch,
@@ -12,7 +13,10 @@ const useCustomHook = () => {
     dataFoods,
     setDataFoods,
     dataDrinks,
-    setDataDrinks };
+    setDataDrinks,
+    mealID,
+    setMealID,
+  };
 };
 
 export default useCustomHook;

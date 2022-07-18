@@ -10,6 +10,7 @@ import './App.css';
 import rockGlass from './images/rockGlass.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalProvider from './context/contextProvider';
+import RecipeDetails from './pages/RecipeDetails';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/done-recipes" component={ ReceitasFeitas } />
         <Route exact path="/favorite-recipes" component={ ReceitasFavoritas } />
+        <Route exact path="/foods/:id" component={ RecipeDetails } />
       </Switch>
       <div className="meals">
         <span className="logo">TRYBE</span>

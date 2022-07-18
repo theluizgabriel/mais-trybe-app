@@ -1,17 +1,27 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 
 const DOZE = 12;
 
 function CardsFoods() {
-  const { dataFoods } = useContext(globalContext);
+  const { dataFoods, setMealID } = useContext(globalContext);
+
+  const history = useHistory();
+
+  const handleClick = (id) => {
+    setMealID(id);
+    history.push('/recipe-details');
+  };
+
   return (
     <div>
       {dataFoods && dataFoods.map((food, index) => (
         index < DOZE
           ? (
             <div
-              key={ food.idFood }
+              key={ food.idMeal }
+              name={ food.idMeal }
               data-testid={ `${index}-recipe-card` }
             >
               <img
@@ -26,7 +36,14 @@ function CardsFoods() {
                 {food.strMeal}
 
               </h2>
-            </div>)
+              <button
+                type="button"
+                onClick={ () => handleClick(food.idMeal) }
+              >
+                Detalhes
+              </button>
+            </div>
+          )
           : <> </>
       ))}
     </div>);
