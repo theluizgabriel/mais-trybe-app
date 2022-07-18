@@ -1,6 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import globalContext from '../context/globalContext';
 import Header from '../components/Header';
+import CardsFoods from '../components/CardsFoods';
+import Footer from '../components/Footer';
 
 function Foods() {
   const { setTitle, setShowSearch } = useContext(globalContext);
@@ -11,7 +13,11 @@ function Foods() {
   });
 
   return (
-    <Header />
+    <>
+      <Header />
+      <CardsFoods />
+      <Footer />
+    </>
   );
 }
 

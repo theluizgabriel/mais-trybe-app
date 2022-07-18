@@ -38,9 +38,8 @@ function Login() {
     const user = {
       email,
     };
-    const stringfyUser = JSON.stringify(user);
-    console.log(stringfyUser);
-    localStorage.setItem('user', stringfyUser);
+    const stringifyUser = JSON.stringify(user);
+    localStorage.setItem('user', stringifyUser);
     localStorage.setItem('mealsToken', 1);
     localStorage.setItem('cocktailsToken', 1);
     history.push('/foods');

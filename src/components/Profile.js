@@ -1,24 +1,22 @@
 import React, { useEffect, useContext } from 'react';
 import globalContext from '../context/globalContext';
-import Header from '../components/Header';
-import CardsDrinks from '../components/CardsDrinks';
-import Footer from '../components/Footer';
+import Header from './Header';
+import Footer from './Footer';
 
-function Drinks() {
+function Profile() {
   const { setTitle, setShowSearch } = useContext(globalContext);
 
   useEffect(() => {
-    setTitle('Drinks');
-    setShowSearch(true);
+    setTitle('Profile');
+    setShowSearch(false);
   });
 
   return (
     <>
       <Header />
-      <CardsDrinks />
       <Footer />
     </>
   );
 }
 
-export default Drinks;
+export default Profile;
