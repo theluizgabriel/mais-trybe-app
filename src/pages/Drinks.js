@@ -1,21 +1,31 @@
 import React, { useEffect, useContext } from 'react';
 import globalContext from '../context/globalContext';
 import Header from '../components/Header';
-import CardsDrinks from '../components/CardsDrinks';
 import Footer from '../components/Footer';
+import Recipes from '../components/Recipes';
+import getDrinksCategories from '../service/DrinkCategoriesApi';
 
 function Drinks() {
-  const { setTitle, setShowSearch } = useContext(globalContext);
+  const { title,
+    setTitle,
+    setShowSearch,
+    setDrinksCategories } = useContext(globalContext);
 
   useEffect(() => {
+    async function fetchCategories() {
+      const data = await getDrinksCategories();
+      setDrinksCategories(data.drinks);
+    }
+    fetchCategories();
     setTitle('Drinks');
     setShowSearch(true);
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <Header />
-      <CardsDrinks />
+      { title === 'Drinks' && <Recipes /> }
       <Footer />
     </>
   );
