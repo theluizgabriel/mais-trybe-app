@@ -1,21 +1,18 @@
 import React, { useEffect, useContext } from 'react';
-import Header from './Header';
 import globalContext from '../context/globalContext';
+import Header from '../components/Header';
 
-function ReceitasFavoritas() {
+function ReceitasFeitas() {
   const { setTitle, setShowSearch } = useContext(globalContext);
 
   useEffect(() => {
-    setTitle('Favorite Recipes');
+    setTitle('Done Recipes');
     setShowSearch(false);
   });
 
   return (
-    <>
-      <Header />
-      <div>ReceitasFavoritas</div>
-    </>
+    <Header />
   );
 }
 
-export default ReceitasFavoritas;
+export default ReceitasFeitas;

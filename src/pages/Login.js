@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
 import globalContext from '../context/globalContext';
@@ -7,33 +8,30 @@ function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [disabled, setDisabled] = useState(true);
+  const [enabled, setEnabled] = useState(false);
 
   const history = useHistory();
 
   useEffect(() => { setTitle('Login'); });
 
-  const buttonValidation = () => {
-    const minPasswordLength = 6;
-    const emailRegex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
-    const validEmail = emailRegex.test(email);
-    const validPassword = password.length >= minPasswordLength;
-    if (validEmail && validPassword) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  };
-
   const handleChange = ({ target }) => {
     if (target.name === 'email') {
       setEmail(target.value);
-      buttonValidation();
-    } else if (target.name === 'password') {
+    } if (target.name === 'password') {
       setPassword(target.value);
-      buttonValidation();
     }
   };
+
+  useEffect(() => {
+    const minPasswordLength = 6;
+    const regex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
+    if (password.length >= minPasswordLength
+    && regex.test(email)) {
+      setEnabled(true);
+    } else {
+      setEnabled(false);
+    }
+  }, [handleChange, email, password]);
 
   const handleButtonClick = (e) => {
     e.preventDefault();
@@ -68,7 +66,7 @@ function Login() {
       <button
         type="submit"
         data-testid="login-submit-btn"
-        disabled={ disabled }
+        disabled={ !enabled }
         onClick={ handleButtonClick }
       >
         Entrar
