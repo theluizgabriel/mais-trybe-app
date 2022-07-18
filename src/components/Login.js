@@ -17,9 +17,7 @@ function Login() {
     const minPasswordLength = 6;
     const emailRegex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
     const validEmail = emailRegex.test(email);
-    console.log('Verifica se o Email está válido: ', validEmail);
     const validPassword = password.length >= minPasswordLength;
-    console.log('Verifica se a senha está válida: ', validPassword);
     if (validEmail && validPassword) {
       setDisabled(false);
     } else {
@@ -42,9 +40,8 @@ function Login() {
     const user = {
       email,
     };
-    const stringfyUser = JSON.stringify(user);
-    console.log(stringfyUser);
-    localStorage.setItem('user', stringfyUser);
+    const stringifyUser = JSON.stringify(user);
+    localStorage.setItem('user', stringifyUser);
     localStorage.setItem('mealsToken', 1);
     localStorage.setItem('cocktailsToken', 1);
     history.push('/foods');
