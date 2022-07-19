@@ -20,15 +20,18 @@ function Header() {
   };
 
   return (
-    <div>
+    <header className="header">
       <h1
         data-testid="page-title"
         id="Title"
       >
         {title}
-
       </h1>
-      <button type="button" onClick={ () => { history.push('/profile'); } }>
+      <button
+        type="button"
+        className="header-btn"
+        onClick={ () => { history.push('/profile'); } }
+      >
         <img
           data-testid="profile-top-btn"
           src={ profileIcon }
@@ -37,20 +40,15 @@ function Header() {
       </button>
       {showSearch
       && (
-        <button
-          type="button"
-          onClick={ showSearchBar }
-        >
+        <button type="button" onClick={ showSearchBar } className="header-btn">
           <img
             data-testid="search-top-btn"
             src={ searchIcon }
             alt="Search Icon"
           />
-
         </button>)}
       {searchBar && <SearchBar />}
-
-    </div>
+    </header>
   );
 }
 

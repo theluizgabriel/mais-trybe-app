@@ -5,47 +5,40 @@ import globalContext from '../context/globalContext';
 const DOZE = 12;
 
 function CardsFoods() {
+  const history = useHistory();
   const { dataFoods, setMealID } = useContext(globalContext);
 
-  const history = useHistory();
-
-  const handleClick = (id) => {
-    setMealID(id);
-    history.push('/recipe-details');
-  };
-
   return (
-    <div>
-      {dataFoods && dataFoods.map((food, index) => (
-        index < DOZE
-          ? (
-            <div
-              key={ food.idMeal }
-              name={ food.idMeal }
-              data-testid={ `${index}-recipe-card` }
+    <div className="meals">
+      { dataFoods && dataFoods.map((food, index) => (
+        index < DOZE && (
+          <div
+            role="button"
+            tabIndex={ 0 } // Lint issue
+            key={ food.idMeal }
+            data-testid={ `${index}-recipe-card` }
+            onClick={ () => {
+              setMealID(food.idMeal);
+              history.push(`/foods/${food.idMeal}`);
+            } }
+            className="food-card"
+            onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
+          >
+            <img
+              width="150px"
+              data-testid={ `${index}-card-img` }
+              src={ food.strMealThumb }
+              alt={ `food-${index}` }
+            />
+            <h2
+              data-testid={ `${index}-card-name` }
             >
-              <img
-                width="150px"
-                data-testid={ `${index}-card-img` }
-                src={ food.strMealThumb }
-                alt={ `food-${index}` }
-              />
-              <h2
-                data-testid={ `${index}-card-name` }
-              >
-                {food.strMeal}
+              {food.strMeal}
 
-              </h2>
-              <button
-                type="button"
-                onClick={ () => handleClick(food.idMeal) }
-              >
-                Detalhes
-              </button>
-            </div>
-          )
-          : <> </>
-      ))}
+            </h2>
+          </div>
+        )
+      )) }
     </div>);
 }
 

@@ -6,7 +6,7 @@ import '../App.css';
 
 function Footer() {
   return (
-    <footer data-testid="footer" className="footer-style">
+    <footer data-testid="footer" className="footer">
       <Link to="/drinks">
         <img
           data-testid="drinks-bottom-btn"

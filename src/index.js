@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import GlobalProvider from './context/contextProvider';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <GlobalProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </GlobalProvider>,
 
   document.getElementById('root'),
 );

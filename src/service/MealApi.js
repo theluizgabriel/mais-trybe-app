@@ -16,6 +16,10 @@ async function getMealApi(type, text) {
       const responseFL = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${text}`);
       const dataDetail = await responseFL.json();
       return dataDetail;
+    } if (type === 'category') {
+      const responseCat = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${text}`);
+      const dataCat = await responseCat.json();
+      return dataCat;
     }
   } catch (error) {
     console.log(error);

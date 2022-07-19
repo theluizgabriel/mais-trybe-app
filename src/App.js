@@ -7,34 +7,21 @@ import Profile from './pages/Profile';
 import ReceitasFavoritas from './pages/ReceitasFavoritas';
 import ReceitasFeitas from './pages/ReceitasFeitas';
 import './App.css';
-import rockGlass from './images/rockGlass.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import GlobalProvider from './context/contextProvider';
-import RecipeDetails from './pages/RecipeDetails';
+import RecipeDetails from './components/RecipeDetails';
 
 function App() {
   return (
-    <GlobalProvider>
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route exact path="/foods" component={ Foods } />
-        <Route exact path="/drinks" component={ Drinks } />
-        <Route exact path="/profile" component={ Profile } />
-        <Route exact path="/done-recipes" component={ ReceitasFeitas } />
-        <Route exact path="/favorite-recipes" component={ ReceitasFavoritas } />
-        <Route exact path="/foods/:id" component={ RecipeDetails } />
-      </Switch>
-      <div className="meals">
-        <span className="logo">TRYBE</span>
-        <object
-          className="rocksGlass"
-          type="image/svg+xml"
-          data={ rockGlass }
-        >
-          Glass
-        </object>
-      </div>
-    </GlobalProvider>
+    <Switch>
+      <Route exact path="/" component={ Login } />
+      <Route exact path="/foods" component={ Foods } />
+      <Route exact path="/drinks" component={ Drinks } />
+      <Route exact path="/profile" component={ Profile } />
+      <Route exact path="/done-recipes" component={ ReceitasFeitas } />
+      <Route exact path="/favorite-recipes" component={ ReceitasFavoritas } />
+      <Route exact path="/foods/:id" component={ RecipeDetails } />
+      <Route exact path="/drinks/:id" component={ RecipeDetails } />
+    </Switch>
   );
 }
 
