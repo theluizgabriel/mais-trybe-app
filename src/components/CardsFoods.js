@@ -6,17 +6,22 @@ const DOZE = 12;
 
 function CardsFoods() {
   const history = useHistory();
-  const { dataFoods } = useContext(globalContext);
+  const { dataFoods, setMealID } = useContext(globalContext);
+
   return (
-    <div>
+    <div className="meals">
       { dataFoods && dataFoods.map((food, index) => (
         index < DOZE && (
           <div
             role="button"
             tabIndex={ 0 } // Lint issue
-            key={ food.idFood }
+            key={ food.idMeal }
             data-testid={ `${index}-recipe-card` }
-            onClick={ () => { history.push(`/foods/${food.idMeal}`); } }
+            onClick={ () => {
+              setMealID(food.idMeal);
+              history.push(`/foods/${food.idMeal}`);
+            } }
+            className="food-card"
             onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
           >
             <img

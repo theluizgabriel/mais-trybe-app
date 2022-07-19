@@ -26,12 +26,21 @@ function FoodsCategories() {
   };
 
   return (
-    <div>
+    <div className="category-area">
+      <button
+        type="button"
+        data-testid="All-category-filter"
+        className="categories"
+        onClick={ handleAllFilter }
+      >
+        All
+      </button>
       { foodsCategories && foodsCategories.map((category, index) => (
         index < CINCO && (
           <button
             value={ category.strCategory }
             type="button"
+            className="categories"
             data-testid={ `${category.strCategory}-category-filter` }
             onClick={ handleCategory }
           >
@@ -39,13 +48,6 @@ function FoodsCategories() {
           </button>
         )
       )) }
-      <button
-        onClick={ handleAllFilter }
-        type="button"
-        data-testid="All-category-filter"
-      >
-        All
-      </button>
     </div>
   );
 }

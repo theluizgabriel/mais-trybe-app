@@ -6,7 +6,7 @@ const DOZE = 12;
 
 function CardsDrinks() {
   const history = useHistory();
-  const { dataDrinks } = useContext(globalContext);
+  const { dataDrinks, setDrinkID } = useContext(globalContext);
   return (
     <div>
       {dataDrinks && dataDrinks.map((drink, index) => (
@@ -16,7 +16,10 @@ function CardsDrinks() {
             tabIndex={ 0 } // Lint issue
             key={ drink.idDrink }
             data-testid={ `${index}-recipe-card` }
-            onClick={ () => { history.push(`/drinks/${drink.idDrink}`); } }
+            onClick={ () => {
+              setDrinkID(drink.idDrink);
+              history.push(`/drinks/${drink.idDrink}`);
+            } }
             onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
           >
             <img

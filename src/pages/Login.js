@@ -46,26 +46,29 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="login-page">
       <input
-        name="email"
         type="email"
         data-testid="email-input"
-        placeholder="exemplo@exemplo.com"
+        name="email"
         value={ email }
+        className="user-input"
+        placeholder="exemplo@exemplo.com"
         onChange={ handleChange }
       />
       <input
-        name="password"
         type="password"
         data-testid="password-input"
-        placeholder="Digite sua senha"
+        name="password"
         value={ password }
+        className="password-input"
+        placeholder="Digite sua senha"
         onChange={ handleChange }
       />
       <button
         type="submit"
         data-testid="login-submit-btn"
+        className="login-btn"
         disabled={ !enabled }
         onClick={ handleButtonClick }
       >
