@@ -10,6 +10,7 @@ const useCustomHook = () => {
   const [foodsCategories, setFoodsCategories] = useState([]);
   const [drinksCategories, setDrinksCategories] = useState([]);
   const [currentID, setCurrentID] = useState([]);
+  const [recipeDetails, setRecipeDetails] = useState([]);
 
   return { title,
     setTitle,
@@ -28,7 +29,9 @@ const useCustomHook = () => {
     drinksCategories,
     setDrinksCategories,
     currentID,
-    setCurrentID };
+    setCurrentID,
+    recipeDetails,
+    setRecipeDetails };
 };
 
 export default useCustomHook;
