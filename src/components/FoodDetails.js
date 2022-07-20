@@ -6,11 +6,15 @@ import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails,
-    favoriteRecipes, setFavoriteRecipes } = useContext(globalContext);
+  const {
+    recipeDetails,
+    setRecipeDetails,
+  } = useContext(globalContext);
   const [detailsArray, setDetailsArray] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -32,28 +36,46 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
 
   const copyToClipboard = () => {
     const url = history.location.pathname;
-    global.alert('Link copied!');
+    // const copy = require('clipboard-copy');
+    // copy(`http://localhost:3000${url}`);
     navigator.clipboard.writeText(`http://localhost:3000${url}`);
+    global.alert('Link copied!');
   };
 
-  const favoriteRecipe = () => {
+  // Salva a mesma receita a cada click
+  const addFavorite = () => {
     const mealInfo = {
       id: recipeDetails[0].idMeal,
       type: 'food',
       nationality: recipeDetails[0].strArea,
       category: recipeDetails[0].strCategory,
-      alcoholicOrNot: null,
+      alcoholicOrNot: '',
       name: recipeDetails[0].strMeal,
       image: recipeDetails[0].strMealThumb,
     };
-    const getFromLS = localStorage.getItem('favoriteRecipes');
-    const toSave = ;
-    setFavoriteRecipes((state) => ([
-      ...state,
-      mealInfo,
-    ]));
-    const stringifyObj = JSON.stringify(favoriteRecipes);
-    localStorage.setItem('favoriteRecipes', stringifyObj);
+    const getFavoriteRecipes = localStorage.getItem('favoriteRecipes');
+    if (getFavoriteRecipes === null) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([mealInfo]));
+    } else {
+      const parse = JSON.parse(getFavoriteRecipes);
+      console.log(parse);
+      const prevLocalStorage = [...parse, mealInfo];
+      localStorage.setItem('favoriteRecipes', JSON.stringify(prevLocalStorage));
+    }
+    setIsFavorite(true);
+  };
+
+  // a fazer
+
+  const removeFavorite = () => {
+    // const getlocalStorage = localStorage.getItem('favoriteRecipes');
+    // const parseLocal = JSON.parse(getlocalStorage);
+    // const favoriteItem = parseLocal.filter((item) = (
+    //   item.id === recipeDetails[0].idMeal
+    // ));
+
+    // localStorage.removeItem('favoriteRecipes', favoriteItem);
+    // setIsFavorite(false);
   };
 
   return (
@@ -79,17 +101,32 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                   alt="Profile Icon"
                 />
               </button>
-              <button
-                type="button"
-                className="details-btn"
-                data-testid="favorite-btn"
-                onClick={ favoriteRecipe }
-              >
-                <img
-                  src={ whiteHeartIcon }
-                  alt="Profile Icon"
-                />
-              </button>
+
+              { isFavorite === false ? (
+                <button
+                  type="button"
+                  className="details-btn"
+                  data-testid="favorite-btn"
+                  onClick={ addFavorite }
+                >
+                  <img
+                    src={ whiteHeartIcon }
+                    alt="Profile Icon"
+                  />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="details-btn"
+                  data-testid="favorite-btn"
+                  onClick={ removeFavorite }
+                >
+                  <img
+                    src={ blackHeartIcon }
+                    alt="Profile Icon"
+                  />
+                </button>
+              )}
             </div>
           </div>
           <p data-testid="recipe-category">{item.strCategory}</p>
