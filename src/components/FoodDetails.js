@@ -5,11 +5,20 @@ import getMealApi from '../service/MealApi';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
   const { recipeDetails, setRecipeDetails } = useContext(globalContext);
+  const [detailsArray, setDetailsArray] = useState([]);
 
   useEffect(() => {
     const mealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
-      console.log(mealApi.meals);
+      const array = Object.entries(mealApi.meals[0])
+        .map((detail) => detail);
+      const arrayFilter1 = array.filter((a) => a[1] !== '' && a[1] !== ' ');
+      const arrayIng = (arrayFilter1.filter((str) => (str[0]
+        .includes('strIngredient')))).map((b) => b[1]);
+      const arrayMea = (arrayFilter1.filter((str) => (str[0]
+        .includes('strMeasure')))).map((b) => b[1]);
+      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
+        measure: arrayMea[i] })));
       setRecipeDetails(mealApi.meals);
     };
     mealDetails(recipeID);
@@ -26,13 +35,11 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           />
           <h3 data-testid="recipe-title">{item.strMeal}</h3>
           <p data-testid="recipe-category">{item.strCategory}</p>
-          {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
+          {/* Os ingredientes devem possuir o atribut data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
-            <li>{`${item.strIngredient1}: ${item.strMeasure1}`}</li>
-            <li>{`${item.strIngredient2}: ${item.strMeasure2}`}</li>
-            <li>{`${item.strIngredient3}: ${item.strMeasure3}`}</li>
-            <li>{`${item.strIngredient4}: ${item.strMeasure4}`}</li>
-            <li>{`${item.strIngredient5}: ${item.strMeasure5}`}</li>
+            {detailsArray.map((detail, i = 1) => (
+              <li key={ i }>{`${detail.ingredient}: ${detail.measure}`}</li>
+            ))}
           </ul>
           <p data-testid="instructions">{item.strInstructions}</p>
           <iframe
