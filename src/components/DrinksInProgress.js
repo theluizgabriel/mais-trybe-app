@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -39,10 +39,21 @@ function DrinksInProgress({ currentId }) {
       const idsOnStorage = Object.keys(getItem.cocktails)
         .some((key) => key === currentId);
       if (idsOnStorage) {
+        const someIng = getItem.cocktails[currentId].some((ing) => ing === name);
+        if (someIng) {
+          const excluirIng = getItem.cocktails[currentId].filter((ing) => ing !== name);
+          return localStorage.setItem('inProgressRecipes', JSON
+            .stringify({
+              cocktails: {
+                ...getItem.cocktails,
+                [currentId]: [...excluirIng],
+              },
+            }));
+        }
         const estrutura = {
           cocktails: {
             ...getItem.cocktails,
-            [currentId]: [...getItem.cocktails.currentId, name],
+            [currentId]: [...getItem.cocktails[currentId], name],
           },
         };
         localStorage.setItem('inProgressRecipes', JSON
