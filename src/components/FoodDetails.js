@@ -4,10 +4,20 @@ import getMealApi from '../service/MealApi';
 
 function FoodDetails({ recipeID }) {
   const [details, setDetails] = useState([]);
+  const [detailsArray, setDetailsArray] = useState([]);
 
   useEffect(() => {
     const mealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
+      const array = Object.entries(mealApi.meals[0])
+        .map((detail) => detail);
+      const arrayFilter1 = array.filter((a) => a[1] !== '' && a[1] !== ' ');
+      const arrayIng = (arrayFilter1.filter((str) => (str[0]
+        .includes('strIngredient')))).map((b) => b[1]);
+      const arrayMea = (arrayFilter1.filter((str) => (str[0]
+        .includes('strMeasure')))).map((b) => b[1]);
+      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
+        measure: arrayMea[i] })));
       setDetails(mealApi.meals);
     };
     mealDetails(recipeID);
@@ -26,26 +36,9 @@ function FoodDetails({ recipeID }) {
           <p data-testid="recipe-category">{item.strCategory}</p>
           {/* Os ingredientes devem possuir o atributo data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
-            <li>{`${item.strIngredient1}: ${item.strMeasure1}`}</li>
-            <li>{`${item.strIngredient2}: ${item.strMeasure2}`}</li>
-            <li>{`${item.strIngredient3}: ${item.strMeasure3}`}</li>
-            <li>{`${item.strIngredient4}: ${item.strMeasure4}`}</li>
-            <li>{`${item.strIngredient5}: ${item.strMeasure5}`}</li>
-            <li>{`${item.strIngredient6}: ${item.strMeasure6}`}</li>
-            <li>{`${item.strIngredient7}: ${item.strMeasure7}`}</li>
-            <li>{`${item.strIngredient8}: ${item.strMeasure8}`}</li>
-            <li>{`${item.strIngredient9}: ${item.strMeasure9}`}</li>
-            <li>{`${item.strIngredient10}: ${item.strMeasure10}`}</li>
-            <li>{`${item.strIngredient11}: ${item.strMeasure11}`}</li>
-            <li>{`${item.strIngredient12}: ${item.strMeasure12}`}</li>
-            <li>{`${item.strIngredient13}: ${item.strMeasure13}`}</li>
-            <li>{`${item.strIngredient14}: ${item.strMeasure14}`}</li>
-            <li>{`${item.strIngredient15}: ${item.strMeasure15}`}</li>
-            <li>{`${item.strIngredient16}: ${item.strMeasure16}`}</li>
-            <li>{`${item.strIngredient17}: ${item.strMeasure17}`}</li>
-            <li>{`${item.strIngredient18}: ${item.strMeasure18}`}</li>
-            <li>{`${item.strIngredient19}: ${item.strMeasure19}`}</li>
-            <li>{`${item.strIngredient20}: ${item.strMeasure20}`}</li>
+            {detailsArray.map((detail, i = 1) => (
+              <li key={ i }>{`${detail.ingredient}: ${detail.measure}`}</li>
+            ))}
           </ul>
           <p data-testid="instructions">{item.strInstructions}</p>
           <iframe
