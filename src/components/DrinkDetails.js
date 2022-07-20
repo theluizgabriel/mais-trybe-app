@@ -4,11 +4,21 @@ import globalContext from '../context/globalContext';
 import getDrinkApi from '../service/DrinkApi';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails } = useContext(globalContext);
+  const { recipeDetails, setRecipeDetails,
+    detailsArray, setDetailsArray } = useContext(globalContext);
 
   useEffect(() => {
     const drinkDetails = async (id) => {
       const drinkApi = await getDrinkApi('details', id);
+      const array = Object.entries(drinkApi.drinks[0])
+        .map((detail) => detail);
+      const arrayFilter1 = array.filter((a) => a[1] !== '' && ' ' && a[1] !== null);
+      const arrayIng = (arrayFilter1.filter((str) => (str[0]
+        .includes('strIngredient')))).map((b) => b[1]);
+      const arrayMea = (arrayFilter1.filter((str) => (str[0]
+        .includes('strMeasure')))).map((b) => b[1]);
+      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+        measure: `${arrayMea[i]}` })));
       setRecipeDetails(drinkApi.drinks);
     };
     drinkDetails(recipeID);
@@ -27,11 +37,15 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
           <p data-testid="recipe-category">{item.strCategory}</p>
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
           <ul>
-            <li>{`${item.strIngredient1}: ${item.strMeasure1}`}</li>
-            <li>{`${item.strIngredient2}: ${item.strMeasure2}`}</li>
-            <li>{`${item.strIngredient3}: ${item.strMeasure3}`}</li>
-            <li>{`${item.strIngredient4}: ${item.strMeasure4}`}</li>
-            <li>{`${item.strIngredient5}: ${item.strMeasure5}`}</li>
+            {detailsArray.map((detail, i = 1) => (
+              <li
+                key={ i }
+                data-testid={ `${index}-ingredient-name-and-measure` }
+              >
+                {`${detail.ingredient}: ${detail.measure}`}
+
+              </li>
+            ))}
           </ul>
           <p data-testid="instructions">{item.strInstructions}</p>
           {/* <div data-testid="${index}-recomendation-card">
