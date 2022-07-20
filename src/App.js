@@ -9,6 +9,7 @@ import ReceitasFeitas from './pages/ReceitasFeitas';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RecipeDetails from './components/RecipeDetails';
+import RecipeInProgress from './components/RecipeInProgress';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route exact path="/favorite-recipes" component={ ReceitasFavoritas } />
       <Route exact path="/foods/:id" component={ RecipeDetails } />
       <Route exact path="/drinks/:id" component={ RecipeDetails } />
+      <Route exact path="/recipe-in-progress/:id" component={ RecipeInProgress } />
     </Switch>
   );
 }

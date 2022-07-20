@@ -41,6 +41,7 @@ function FoodsCategories() {
             value={ category.strCategory }
             type="button"
             className="categories"
+            key={ index }
             data-testid={ `${category.strCategory}-category-filter` }
             onClick={ handleCategory }
           >

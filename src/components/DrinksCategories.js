@@ -31,6 +31,7 @@ function DrinksCategories() {
         index < CINCO && (
           <button
             value={ category.strCategory }
+            key={ index }
             type="button"
             data-testid={ `${category.strCategory}-category-filter` }
             onClick={ handleCategory }

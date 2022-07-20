@@ -21,7 +21,9 @@ function GlobalProvider({ children }) {
     drinksCategories,
     setDrinksCategories,
     currentID,
-    setCurrentID } = useCustomHook();
+    setCurrentID,
+    recipeDetails,
+    setRecipeDetails } = useCustomHook();
 
   const value = {
     title,
@@ -41,7 +43,9 @@ function GlobalProvider({ children }) {
     drinksCategories,
     setDrinksCategories,
     currentID,
-    setCurrentID };
+    setCurrentID,
+    recipeDetails,
+    setRecipeDetails };
 
   return (
     <globalContext.Provider value={ value }>
