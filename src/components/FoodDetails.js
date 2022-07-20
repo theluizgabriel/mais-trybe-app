@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
+import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
 
-function FoodDetails({ recipeID }) {
-  const [details, setDetails] = useState([]);
+function FoodDetails({ recipeID, startRecipeBtn }) {
+  const { recipeDetails, setRecipeDetails } = useContext(globalContext);
   const [detailsArray, setDetailsArray] = useState([]);
 
   useEffect(() => {
@@ -18,14 +19,14 @@ function FoodDetails({ recipeID }) {
         .includes('strMeasure')))).map((b) => b[1]);
       setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
         measure: arrayMea[i] })));
-      setDetails(mealApi.meals);
+      setRecipeDetails(mealApi.meals);
     };
     mealDetails(recipeID);
   }, []);
 
   return (
     <div>
-      { details && details.map((item, index) => (
+      { recipeDetails && recipeDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strMealThumb }
@@ -51,6 +52,13 @@ function FoodDetails({ recipeID }) {
           {/* <div data-testid="${index}-recomendation-card">
             {item.strRecomendation}
           </div> */}
+          <button
+            type="button"
+            data-testid="start-recipe-btn"
+            onClick={ startRecipeBtn }
+          >
+            Start Recipe
+          </button>
         </div>
       )) }
     </div>

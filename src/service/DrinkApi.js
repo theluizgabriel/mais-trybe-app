@@ -13,8 +13,9 @@ async function getDrinkApi(type, text) {
       const dataFL = await responseFL.json();
       return dataFL;
     } if (type === 'details') {
-      const responseFL = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${text}`);
-      const dataDetail = await responseFL.json();
+      const responseDetails = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${text}`);
+      const dataDetail = await responseDetails.json();
+      console.log(dataDetail);
       return dataDetail;
     } if (type === 'category') {
       const responseCat = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${text}`);
