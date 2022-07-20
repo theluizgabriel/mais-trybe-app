@@ -34,7 +34,7 @@ function FoodDetails({ recipeID }) {
           />
           <h3 data-testid="recipe-title">{item.strMeal}</h3>
           <p data-testid="recipe-category">{item.strCategory}</p>
-          {/* Os ingredientes devem possuir o atributo data-testid="${index}-ingredient-name-and-measure"; */}
+          {/* Os ingredientes devem possuir o atribut data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
             {detailsArray.map((detail, i = 1) => (
               <li key={ i }>{`${detail.ingredient}: ${detail.measure}`}</li>
