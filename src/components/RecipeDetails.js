@@ -9,7 +9,7 @@ function RecipeDetails({ history }) {
   const currentID = (history.location.pathname).split('/')[2];
 
   const startRecipeBtn = () => {
-    history.push(`/recipe-in-progress/${currentID}`);
+    history.push(`/${currentPage}/${currentID}/in-progress/`);
   };
 
   return (

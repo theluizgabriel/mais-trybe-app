@@ -1,24 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails } = useContext(globalContext);
-  const [detailsArray, setDetailsArray] = useState([]);
+  const { recipeDetails, setRecipeDetails,
+    detailsArray, setDetailsArray } = useContext(globalContext);
 
   useEffect(() => {
     const mealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
       const array = Object.entries(mealApi.meals[0])
         .map((detail) => detail);
-      const arrayFilter1 = array.filter((a) => a[1] !== '' && a[1] !== ' ');
+      const arrayFilter1 = array.filter((a) => a[1] !== '' && ' ' && a[1] !== null);
       const arrayIng = (arrayFilter1.filter((str) => (str[0]
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayMea = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
-        measure: arrayMea[i] })));
+      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+        measure: `${arrayMea[i]}` })));
       setRecipeDetails(mealApi.meals);
     };
     mealDetails(recipeID);
@@ -38,7 +39,13 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           {/* Os ingredientes devem possuir o atribut data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
             {detailsArray.map((detail, i = 1) => (
-              <li key={ i }>{`${detail.ingredient}: ${detail.measure}`}</li>
+              <li
+                key={ i }
+                data-testid={ `${index}-ingredient-name-and-measure` }
+              >
+                {`${detail.ingredient}: ${detail.measure}`}
+
+              </li>
             ))}
           </ul>
           <p data-testid="instructions">{item.strInstructions}</p>
@@ -64,5 +71,10 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     </div>
   );
 }
+
+FoodDetails.propTypes = {
+  recipeID: PropTypes.string.isRequired,
+  startRecipeBtn: PropTypes.func.isRequired,
+};
 
 export default FoodDetails;

@@ -1,8 +1,18 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import DrinksInProgress from './DrinksInProgress';
+import FoodsInProgress from './FoodsInProgress';
 
 function RecipeInProgress() {
+  const history = useHistory().location.pathname;
+  const currentID = useHistory().location.pathname.split('/')[2];
+
   return (
-    <h2>Olá!</h2>
+    <div>
+      { history.includes('foods') && <FoodsInProgress currentId={ currentID } />}
+      { history.includes('drinks') && <DrinksInProgress currentId={ currentID } />}
+    </div>
+
   );
 }
 
