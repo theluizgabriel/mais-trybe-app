@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
@@ -8,7 +8,6 @@ import getDrinkApi from '../service/DrinkApi';
 function DrinksInProgress({ currentId }) {
   const { recipeDetails, detailsArray,
     setDetailsArray, setRecipeDetails } = useContext(globalContext);
-  const [arrayStorage, setArrayStorage] = useState('');
 
   useEffect(() => {
     const drinkDetails = async (id) => {
@@ -26,19 +25,18 @@ function DrinksInProgress({ currentId }) {
       setRecipeDetails(drinkApi.drinks);
     };
     drinkDetails(currentId);
-    setArrayStorage([JSON.parse(localStorage.getItem('inProgressRecipes'))]);
   }, []);
 
   const pushCheck = ({ target: { name } }) => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    if (getItem === null || undefined) {
+    if (getItem === null || getItem.cocktails === undefined) {
       const estrutura = {
+        ...getItem,
         cocktails: {
           [currentId]: [name],
         },
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
-      setArrayStorage([estrutura]);
     } else {
       const idsOnStorage = Object.keys(getItem.cocktails)
         .some((key) => key === currentId);
@@ -47,35 +45,42 @@ function DrinksInProgress({ currentId }) {
         if (someIng) {
           const excluirIng = getItem.cocktails[currentId].filter((ing) => ing !== name);
           const estruturaExcluir = {
+            ...getItem,
             cocktails: {
               ...getItem.cocktails,
               [currentId]: [...excluirIng],
             },
           };
-          setArrayStorage([estruturaExcluir]);
           return localStorage.setItem('inProgressRecipes', JSON
             .stringify(estruturaExcluir));
         }
         const estrutura = {
+          ...getItem,
           cocktails: {
             ...getItem.cocktails,
             [currentId]: [...getItem.cocktails[currentId], name],
           },
         };
-        setArrayStorage([estrutura]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       } else {
         const estrutura = {
+          ...getItem,
           cocktails: {
             ...getItem.cocktails,
             [currentId]: [name],
           },
         };
-        setArrayStorage([estrutura]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       }
+    }
+  };
+
+  const checkedHandle = (ing) => {
+    const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (getItem && getItem.cocktails) {
+      return getItem.cocktails[currentId].includes(ing);
     }
   };
 
@@ -119,8 +124,7 @@ function DrinksInProgress({ currentId }) {
                     type="checkbox"
                     name={ detail.ingredient }
                     onChange={ pushCheck }
-                    // checked={ arrayStorage[0].cocktails[currentId]
-                    //   .includes(detail.ingredient) }
+                    checked={ checkedHandle(detail.ingredient) }
                   />
                   {`${detail.ingredient}: ${detail.measure}`}
                 </li>
