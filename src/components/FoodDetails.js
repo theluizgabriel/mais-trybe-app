@@ -7,6 +7,7 @@ import getMealApi from '../service/MealApi';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import MessageLinkCopied from './MessageLinkCopied';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
   const {
@@ -15,6 +16,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
   } = useContext(globalContext);
   const [detailsArray, setDetailsArray] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -34,15 +36,23 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     mealDetails(recipeID);
   }, []);
 
+  useEffect(() => {
+    const func = () => {
+      const getlocalStorage = localStorage.getItem('favoriteRecipes');
+      const parseLocal = JSON.parse(getlocalStorage);
+      if (parseLocal !== null) {
+        setIsFavorite(parseLocal.some((item) => (item.id === recipeID)));
+      }
+    };
+    func();
+  }, []);
+
   const copyToClipboard = () => {
     const url = history.location.pathname;
-    // const copy = require('clipboard-copy');
-    // copy(`http://localhost:3000${url}`);
     navigator.clipboard.writeText(`http://localhost:3000${url}`);
-    global.alert('Link copied!');
+    setIsCopied(true);
   };
 
-  // Salva a mesma receita a cada click
   const addFavorite = () => {
     const mealInfo = {
       id: recipeDetails[0].idMeal,
@@ -58,24 +68,21 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
       localStorage.setItem('favoriteRecipes', JSON.stringify([mealInfo]));
     } else {
       const parse = JSON.parse(getFavoriteRecipes);
-      console.log(parse);
       const prevLocalStorage = [...parse, mealInfo];
       localStorage.setItem('favoriteRecipes', JSON.stringify(prevLocalStorage));
     }
     setIsFavorite(true);
   };
 
-  // a fazer
-
   const removeFavorite = () => {
-    // const getlocalStorage = localStorage.getItem('favoriteRecipes');
-    // const parseLocal = JSON.parse(getlocalStorage);
-    // const favoriteItem = parseLocal.filter((item) = (
-    //   item.id === recipeDetails[0].idMeal
-    // ));
-
-    // localStorage.removeItem('favoriteRecipes', favoriteItem);
-    // setIsFavorite(false);
+    const getlocalStorage = localStorage.getItem('favoriteRecipes');
+    const parseLocal = JSON.parse(getlocalStorage);
+    console.log(parseLocal);
+    const newLocalStorage = parseLocal.filter(
+      (item) => item.id !== recipeDetails[0].idMeal,
+    );
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
+    setIsFavorite(false);
   };
 
   return (
@@ -101,12 +108,12 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                   alt="Profile Icon"
                 />
               </button>
-
               { isFavorite === false ? (
                 <button
                   type="button"
                   className="details-btn"
                   data-testid="favorite-btn"
+                  src={ whiteHeartIcon }
                   onClick={ addFavorite }
                 >
                   <img
@@ -119,6 +126,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                   type="button"
                   className="details-btn"
                   data-testid="favorite-btn"
+                  src={ blackHeartIcon }
                   onClick={ removeFavorite }
                 >
                   <img
@@ -127,6 +135,9 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                   />
                 </button>
               )}
+              {
+                isCopied && <MessageLinkCopied />
+              }
             </div>
           </div>
           <p data-testid="recipe-category">{item.strCategory}</p>

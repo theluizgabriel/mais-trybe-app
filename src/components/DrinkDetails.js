@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import getDrinkApi from '../service/DrinkApi';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import MessageLinkCopied from './MessageLinkCopied';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
   const {
@@ -13,7 +15,15 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     setRecipeDetails,
   } = useContext(globalContext);
   const [detailsArray, setDetailsArray] = useState([]);
-  // const history = useHistory();
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const history = useHistory();
+
+  const copyToClipboard = () => {
+    const url = history.location.pathname;
+    navigator.clipboard.writeText(`http://localhost:3000${url}`);
+    setIsCopied(true);
+  };
 
   useEffect(() => {
     const drinkDetails = async (id) => {
@@ -33,7 +43,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
   }, []);
 
   // Salva a mesma receita a cada click
-  const favoriteRecipe = () => {
+  const addFavorite = () => {
     const drinkInfo = {
       id: recipeDetails[0].idDrink,
       type: 'drink',
@@ -48,10 +58,32 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
       localStorage.setItem('favoriteRecipes', JSON.stringify([drinkInfo]));
     } else {
       const parse = JSON.parse(getFavoriteRecipes);
-      console.log(parse);
       const prevLocalStorage = [...parse, drinkInfo];
       localStorage.setItem('favoriteRecipes', JSON.stringify(prevLocalStorage));
     }
+    setIsFavorite(true);
+  };
+
+  useEffect(() => {
+    const func = () => {
+      const getlocalStorage = localStorage.getItem('favoriteRecipes');
+      const parseLocal = JSON.parse(getlocalStorage);
+      if (parseLocal !== null) {
+        setIsFavorite(parseLocal.some((item) => (item.id === recipeID)));
+      }
+    };
+    func();
+  }, []);
+
+  const removeFavorite = () => {
+    const getlocalStorage = localStorage.getItem('favoriteRecipes');
+    const parseLocal = JSON.parse(getlocalStorage);
+    console.log(parseLocal);
+    const newLocalStorage = parseLocal.filter(
+      (item) => item.id !== recipeDetails[0].idDrink,
+    );
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
+    setIsFavorite(false);
   };
 
   return (
@@ -64,31 +96,50 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
             data-testid="recipe-photo"
           />
           <div id="topper">
-            <h3 data-testid="recipe-title">{item.strMeal}</h3>
-            {/* <div> */}
-            <button
-              type="button"
-              className="details-btn"
-              data-testid="share-btn"
-              // onClick={ copyToClipboard }
-            >
-              <img
-                src={ shareIcon }
-                alt="Profile Icon"
-              />
-            </button>
-            <button
-              type="button"
-              className="details-btn"
-              data-testid="favorite-btn"
-              onClick={ favoriteRecipe }
-            >
-              <img
-                src={ whiteHeartIcon }
-                alt="Profile Icon"
-              />
-            </button>
-            {/* </div> */}
+            <h3 data-testid="recipe-title">{item.strDrink}</h3>
+            <div>
+              <button
+                type="button"
+                className="details-btn"
+                data-testid="share-btn"
+                onClick={ copyToClipboard }
+              >
+                <img
+                  src={ shareIcon }
+                  alt="Profile Icon"
+                />
+              </button>
+              { isFavorite === false ? (
+                <button
+                  type="button"
+                  className="details-btn"
+                  data-testid="favorite-btn"
+                  src={ whiteHeartIcon }
+                  onClick={ addFavorite }
+                >
+                  <img
+                    src={ whiteHeartIcon }
+                    alt="Profile Icon"
+                  />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="details-btn"
+                  data-testid="favorite-btn"
+                  src={ blackHeartIcon }
+                  onClick={ removeFavorite }
+                >
+                  <img
+                    src={ blackHeartIcon }
+                    alt="Profile Icon"
+                  />
+                </button>
+              )}
+              {
+                isCopied && <MessageLinkCopied />
+              }
+            </div>
           </div>
           <p data-testid="recipe-category">{item.strCategory}</p>
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
