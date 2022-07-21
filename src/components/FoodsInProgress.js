@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
@@ -7,6 +8,7 @@ import getMealApi from '../service/MealApi';
 function FoodsInProgress({ currentId }) {
   const { recipeDetails, detailsArray,
     setDetailsArray, setRecipeDetails } = useContext(globalContext);
+  const [arrayStorage, setArrayStorage] = useState('');
 
   useEffect(() => {
     const mealDetails = async (id) => {
@@ -24,7 +26,63 @@ function FoodsInProgress({ currentId }) {
       setRecipeDetails(mealApi.meals);
     };
     mealDetails(currentId);
+    setArrayStorage([JSON.parse(localStorage.getItem('inProgressRecipes'))]);
   }, []);
+
+  const pushCheck = ({ target: { name } }) => {
+    const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    console.log(getItem);
+    if (getItem === null || undefined) {
+      const estrutura = {
+        cocktails: { },
+        meals: {
+          [currentId]: [name],
+        },
+      };
+      localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
+      setArrayStorage([estrutura]);
+    } if (getItem.meals) {
+      const idsOnStorage = Object.keys(getItem.meals)
+        .some((key) => key === currentId);
+      if (idsOnStorage) {
+        const someIng = getItem.meals[currentId].some((ing) => ing === name);
+        if (someIng) {
+          const excluirIng = getItem.meals[currentId].filter((ing) => ing !== name);
+          const estruturaExcluir = {
+            meals: {
+              ...getItem.meals,
+              [currentId]: [...excluirIng],
+            },
+            cocktails: { ...getItem.cocktails },
+          };
+          setArrayStorage([estruturaExcluir]);
+          return localStorage.setItem('inProgressRecipes', JSON
+            .stringify(estruturaExcluir));
+        }
+        const estrutura = {
+          meals: {
+            ...getItem.meals,
+            [currentId]: [...getItem.meals[currentId], name],
+          },
+          cocktails: { ...getItem.cocktails },
+        };
+        setArrayStorage([estrutura]);
+        localStorage.setItem('inProgressRecipes', JSON
+          .stringify(estrutura));
+      } else {
+        const estrutura = {
+          meals: {
+            ...getItem.meals,
+            [currentId]: [name],
+          },
+          cocktails: { ...getItem.cocktails },
+        };
+        setArrayStorage([estrutura]);
+        localStorage.setItem('inProgressRecipes', JSON
+          .stringify(estrutura));
+      }
+    }
+  };
 
   return (
     <>
@@ -57,13 +115,22 @@ function FoodsInProgress({ currentId }) {
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
             {detailsArray.map((detail, i) => (
-              <li
+              <div
                 key={ i }
-                data-testid={ `${index}-ingredient-step` }
+                data-testid={ `${i}-ingredient-step` }
               >
-                {`${detail.ingredient}: ${detail.measure}`}
+                <li>
+                  <input
+                    type="checkbox"
+                    name={ detail.ingredient }
+                    onChange={ pushCheck }
+                    // checked={ arrayStorage[0].meals[currentId]
+                    //   .includes(detail.ingredient) }
+                  />
+                  {`${detail.ingredient}: ${detail.measure}`}
 
-              </li>
+                </li>
+              </div>
             ))}
           </ul>
           <p data-testid="instructions">{item.strInstructions}</p>
@@ -79,5 +146,9 @@ function FoodsInProgress({ currentId }) {
     </>
   );
 }
+
+FoodsInProgress.propTypes = {
+  currentId: PropTypes.string.isRequired,
+};
 
 export default FoodsInProgress;

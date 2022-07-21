@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
 
@@ -70,5 +71,10 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     </div>
   );
 }
+
+FoodDetails.propTypes = {
+  recipeID: PropTypes.string.isRequired,
+  startRecipeBtn: PropTypes.func.isRequired,
+};
 
 export default FoodDetails;

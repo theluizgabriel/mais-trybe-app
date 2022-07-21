@@ -31,7 +31,7 @@ function DrinksInProgress({ currentId }) {
 
   const pushCheck = ({ target: { name } }) => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    if (getItem === null) {
+    if (getItem === null || undefined) {
       const estrutura = {
         cocktails: {
           [currentId]: [name],
@@ -119,8 +119,8 @@ function DrinksInProgress({ currentId }) {
                     type="checkbox"
                     name={ detail.ingredient }
                     onChange={ pushCheck }
-                    checked={ arrayStorage[0].cocktails[currentId]
-                      .includes(detail.ingredient) }
+                    // checked={ arrayStorage[0].cocktails[currentId]
+                    //   .includes(detail.ingredient) }
                   />
                   {`${detail.ingredient}: ${detail.measure}`}
                 </li>
