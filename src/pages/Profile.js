@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import { useHistory } from 'react-router';
 import globalContext from '../context/globalContext';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 function Profile() {
   const { setTitle, setShowSearch } = useContext(globalContext);
@@ -16,6 +17,9 @@ function Profile() {
   const getEmail = () => {
     const userEmail = localStorage.getItem('user');
     const email = JSON.parse(userEmail);
+    if (email === null) {
+      return 'email@email.com';
+    }
     return email.email;
   };
 
@@ -51,6 +55,7 @@ function Profile() {
       >
         Logout
       </button>
+      <Footer />
     </div>
 
   );

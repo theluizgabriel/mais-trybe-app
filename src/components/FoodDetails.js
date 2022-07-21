@@ -1,14 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
+import getDrinkApi from '../service/DrinkApi';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails } = useContext(globalContext);
+  const { mealDetails,
+    setMealDetails,
+    setDataDrinks,
+    dataDrinks,
+    setDrinkID } = useContext(globalContext);
   const [detailsArray, setDetailsArray] = useState([]);
+  const history = useHistory();
+  const SEIS = 6;
 
   useEffect(() => {
-    const mealDetails = async (id) => {
+    const fetchMealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
       const array = Object.entries(mealApi.meals[0])
         .map((detail) => detail);
@@ -19,14 +27,22 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
         .includes('strMeasure')))).map((b) => b[1]);
       setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
         measure: arrayMea[i] })));
-      setRecipeDetails(mealApi.meals);
+      setMealDetails(mealApi.meals);
     };
-    mealDetails(recipeID);
+    fetchMealDetails(recipeID);
+  }, []);
+
+  useEffect(() => {
+    const recomendationCards = async () => {
+      const rec = await getDrinkApi('name', '');
+      setDataDrinks(rec.drinks);
+    };
+    recomendationCards();
   }, []);
 
   return (
     <div>
-      { recipeDetails && recipeDetails.map((item, index) => (
+      { mealDetails && mealDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strMealThumb }
@@ -61,6 +77,33 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
+      {dataDrinks && dataDrinks.map((drink, index) => (
+        index < SEIS && (
+          <div
+            role="button"
+            tabIndex={ 0 } // Lint issue
+            key={ drink.idDrink }
+            data-testid={ `${index}-recomendation-card` }
+            onClick={ () => {
+              setDrinkID(drink.idDrink);
+              history.push(`/drinks/${drink.idDrink}`);
+            } }
+            onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
+          >
+            <img
+              width="150px"
+              data-testid={ `${index}-card-img` }
+              src={ drink.strDrinkThumb }
+              alt={ `drink-${index}` }
+            />
+            <h2
+              data-testid={ `${index}-card-name` }
+            >
+              {drink.strDrink}
+
+            </h2>
+          </div>)
+      ))}
     </div>
   );
 }

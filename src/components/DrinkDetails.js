@@ -1,22 +1,38 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import getDrinkApi from '../service/DrinkApi';
+import getMealApi from '../service/MealApi';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails } = useContext(globalContext);
+  const { drinkDetails,
+    setDrinkDetails,
+    setDataFoods,
+    dataFoods,
+    setMealID } = useContext(globalContext);
+  const history = useHistory();
+  const SEIS = 6;
 
   useEffect(() => {
-    const drinkDetails = async (id) => {
+    const fetchDrinkDetails = async (id) => {
       const drinkApi = await getDrinkApi('details', id);
-      setRecipeDetails(drinkApi.drinks);
+      setDrinkDetails(drinkApi.drinks);
     };
-    drinkDetails(recipeID);
+    fetchDrinkDetails(recipeID);
+  }, []);
+
+  useEffect(() => {
+    const recomendationCards = async () => {
+      const rec = await getMealApi('name', '');
+      setDataFoods(rec.meals);
+    };
+    recomendationCards();
   }, []);
 
   return (
     <div>
-      { recipeDetails && recipeDetails.map((item, index) => (
+      { drinkDetails && drinkDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strDrinkThumb }
@@ -45,6 +61,35 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
             Start Recipe
           </button>
         </div>
+      )) }
+      { dataFoods && dataFoods.map((food, index) => (
+        index < SEIS && (
+          <div
+            role="button"
+            tabIndex={ 0 } // Lint issue
+            key={ food.idMeal }
+            data-testid={ `${index}-recomendation-card` }
+            onClick={ () => {
+              setMealID(food.idMeal);
+              history.push(`/foods/${food.idMeal}`);
+            } }
+            className="food-card"
+            onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
+          >
+            <img
+              width="150px"
+              data-testid={ `${index}-card-img` }
+              src={ food.strMealThumb }
+              alt={ `food-${index}` }
+            />
+            <h2
+              data-testid={ `${index}-card-name` }
+            >
+              {food.strMeal}
+
+            </h2>
+          </div>
+        )
       )) }
     </div>
   );
