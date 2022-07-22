@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useContext } from 'react';
 import Header from '../components/Header';
 import Filters from '../components/Filters';
+import globalContext from '../context/globalContext';
 import RecipeCard from '../components/RecipeCard';
 
 function FavoriteRecipes() {
+  const { setTitle, setShowSearch } = useContext(globalContext);
   const favoritesRecipes = JSON
     .parse(localStorage.getItem('favoriteRecipes'));
   const [filters, setFilters] = useState('all');
   const [favorites, setFavorites] = useState(favoritesRecipes);
+
+  useEffect(() => {
+    setTitle('Favorite Recipes');
+    setShowSearch(false);
+  }, []);
 
   useEffect(() => {
     if (filters === 'all') {

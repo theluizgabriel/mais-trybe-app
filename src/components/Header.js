@@ -23,7 +23,7 @@ function Header() {
     <header className="header">
       <h1
         data-testid="page-title"
-        id="Title"
+        className="Title"
       >
         {title}
       </h1>

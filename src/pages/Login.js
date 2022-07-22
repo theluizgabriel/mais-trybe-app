@@ -25,7 +25,7 @@ function Login() {
   useEffect(() => {
     const minPasswordLength = 6;
     const regex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
-    if (password.length >= minPasswordLength
+    if (password.length > minPasswordLength
     && regex.test(email)) {
       setEnabled(true);
     } else {
