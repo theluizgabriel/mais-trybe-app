@@ -1,15 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getMealApi from '../service/MealApi';
 
 function FoodsInProgress({ currentId }) {
+  const history = useHistory();
   const { mealDetails, mealIng,
     setMealIng, setMealDetails } = useContext(globalContext);
   const [checkIng, setCheckIng] = useState([]);
+  const [isFinishButtonDisabled, setIsFinishButtonDisabled] = useState(true);
 
   useEffect(() => {
     const fetchMealDetails = async (id) => {
@@ -84,6 +87,15 @@ function FoodsInProgress({ currentId }) {
   };
 
   useEffect(() => {
+    if (checkIng.length === mealIng.length) {
+      setIsFinishButtonDisabled(false);
+    } else {
+      setIsFinishButtonDisabled(true);
+    }
+  },
+  [checkIng]);
+
+  useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (getItem && getItem.meals) {
       const id = Object.keys(getItem.meals).includes(currentId);
@@ -97,6 +109,10 @@ function FoodsInProgress({ currentId }) {
     if (checkIng) {
       return checkIng.some((itemIng) => itemIng === ing);
     }
+  };
+
+  const finishButton = () => {
+    history.push('/done-recipes');
   };
 
   return (
@@ -151,6 +167,8 @@ function FoodsInProgress({ currentId }) {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            disabled={ isFinishButtonDisabled }
+            onClick={ finishButton }
           >
             Finish
 
