@@ -40,7 +40,7 @@ function FoodsInProgress({ currentId }) {
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
       setCheckIng(estrutura.meals[currentId]);
-    } if (getItem.meals) {
+    } else {
       const idsOnStorage = Object.keys(getItem.meals)
         .some((key) => key === currentId);
       if (idsOnStorage) {
