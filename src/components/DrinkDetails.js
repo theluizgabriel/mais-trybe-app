@@ -10,6 +10,8 @@ import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import MessageLinkCopied from './MessageLinkCopied';
+import addFavoriteDrink from '../service/AddFavoriteDrink';
+import removeFavoriteDrink from '../service/RemoveFavoriteDrink';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
   const { drinkDetails,
@@ -55,25 +57,8 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     setIsCopied(true);
   };
 
-  // Salva a mesma receita a cada click
-  const addFavorite = () => {
-    const drinkInfo = {
-      id: drinkDetails[0].idDrink,
-      type: 'drink',
-      nationality: '',
-      category: drinkDetails[0].strCategory,
-      alcoholicOrNot: drinkDetails[0].strAlcoholic,
-      name: drinkDetails[0].strDrink,
-      image: drinkDetails[0].strDrinkThumb,
-    };
-    const getFavoriteRecipes = localStorage.getItem('favoriteRecipes');
-    if (getFavoriteRecipes === null) {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([drinkInfo]));
-    } else {
-      const parse = JSON.parse(getFavoriteRecipes);
-      const prevLocalStorage = [...parse, drinkInfo];
-      localStorage.setItem('favoriteRecipes', JSON.stringify(prevLocalStorage));
-    }
+  const addFav = () => {
+    addFavoriteDrink(drinkDetails);
     setIsFavorite(true);
   };
 
@@ -88,14 +73,8 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     func();
   }, []);
 
-  const removeFavorite = () => {
-    const getlocalStorage = localStorage.getItem('favoriteRecipes');
-    const parseLocal = JSON.parse(getlocalStorage);
-    console.log(parseLocal);
-    const newLocalStorage = parseLocal.filter(
-      (item) => item.id !== drinkDetails[0].idDrink,
-    );
-    localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
+  const removeFav = () => {
+    removeFavoriteDrink(drinkDetails);
     setIsFavorite(false);
   };
 
@@ -128,7 +107,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
                   className="details-btn"
                   data-testid="favorite-btn"
                   src={ whiteHeartIcon }
-                  onClick={ addFavorite }
+                  onClick={ addFav }
                 >
                   <img
                     src={ whiteHeartIcon }
@@ -141,7 +120,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
                   className="details-btn"
                   data-testid="favorite-btn"
                   src={ blackHeartIcon }
-                  onClick={ removeFavorite }
+                  onClick={ removeFav }
                 >
                   <img
                     src={ blackHeartIcon }

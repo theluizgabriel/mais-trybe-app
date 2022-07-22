@@ -119,3 +119,7 @@ body {
 .carousel-item {
 padding-right: 50px;
 }
+
+.ingredients:checked + label {
+  text-decoration: line-through;
+}

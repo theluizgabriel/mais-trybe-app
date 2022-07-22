@@ -1,15 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getDrinkApi from '../service/DrinkApi';
+import MessageLinkCopied from './MessageLinkCopied';
+import addFavoriteDrink from '../service/AddFavoriteDrink';
+import removeFavoriteDrink from '../service/RemoveFavoriteDrink';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 
 function DrinksInProgress({ currentId }) {
+  const history = useHistory();
   const { drinkDetails, drinkIng,
     setDrinkIng, setDrinkDetails } = useContext(globalContext);
   const [checkIng, setCheckIng] = useState([]);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchDrinkDetails = async (id) => {
@@ -99,6 +107,33 @@ function DrinksInProgress({ currentId }) {
     }
   };
 
+  const copyToClipboard = () => {
+    const url = history.location.pathname;
+    navigator.clipboard.writeText(`http://localhost:3000${url}`);
+    setIsCopied(true);
+  };
+
+  const addFav = () => {
+    addFavoriteDrink(drinkDetails);
+    setIsFavorite(true);
+  };
+
+  useEffect(() => {
+    const func = () => {
+      const getlocalStorage = localStorage.getItem('favoriteRecipes');
+      const parseLocal = JSON.parse(getlocalStorage);
+      if (parseLocal !== null) {
+        setIsFavorite(parseLocal.some((item) => (item.id === currentId)));
+      }
+    };
+    func();
+  }, []);
+
+  const removeFav = () => {
+    removeFavoriteDrink(drinkDetails);
+    setIsFavorite(false);
+  };
+
   return (
     <div>
       { drinkDetails && drinkDetails.map((item, index) => (
@@ -111,6 +146,7 @@ function DrinksInProgress({ currentId }) {
           <h3 data-testid="recipe-title">{item.strDrink}</h3>
           <button
             type="button"
+            onClick={ copyToClipboard }
             data-testid="share-btn"
           >
             <img
@@ -118,22 +154,40 @@ function DrinksInProgress({ currentId }) {
               alt="Share"
             />
           </button>
-          <button
-            type="button"
-            data-testid="favorite-btn"
-          >
-            <img
+          { isFavorite === false ? (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
+              src={ whiteHeartIcon }
+              onClick={ addFav }
+            >
+              <img
+                src={ whiteHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
               src={ blackHeartIcon }
-              alt="Share"
-            />
-          </button>
+              onClick={ removeFav }
+            >
+              <img
+                src={ blackHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          )}
+          {isCopied && <MessageLinkCopied />}
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
             {drinkIng.map((detail, i) => (
               <div
                 key={ i }
                 data-testid={ `${i}-ingredient-step` }
-                className="ingredients"
               >
                 <li>
                   <input
@@ -141,8 +195,11 @@ function DrinksInProgress({ currentId }) {
                     name={ detail.ingredient }
                     onChange={ pushCheck }
                     checked={ checkedHandle(detail.ingredient) }
+                    className="ingredients"
                   />
-                  {`${detail.ingredient}: ${detail.measure}`}
+                  <label htmlFor={ detail.ingredient }>
+                    {`${detail.ingredient}: ${detail.measure}`}
+                  </label>
                 </li>
               </div>
             ))}

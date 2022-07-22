@@ -1,15 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getMealApi from '../service/MealApi';
+import MessageLinkCopied from './MessageLinkCopied';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import addFavoriteMeal from '../service/AddFavoriteMeal';
+import removeFavoriteMeal from '../service/RemoveFavoriteMeal';
 
 function FoodsInProgress({ currentId }) {
+  const history = useHistory();
   const { mealDetails, mealIng,
     setMealIng, setMealDetails } = useContext(globalContext);
   const [checkIng, setCheckIng] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const fetchMealDetails = async (id) => {
@@ -38,7 +46,6 @@ function FoodsInProgress({ currentId }) {
           [currentId]: [name],
         },
       };
-      setArrayStorage(estrutura);
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
       setCheckIng(estrutura.meals[currentId]);
     } else {
@@ -100,6 +107,33 @@ function FoodsInProgress({ currentId }) {
     }
   };
 
+  const copyToClipboard = () => {
+    const url = history.location.pathname;
+    navigator.clipboard.writeText(`http://localhost:3000${url}`);
+    setIsCopied(true);
+  };
+
+  const addFav = () => {
+    addFavoriteMeal(mealDetails);
+    setIsFavorite(true);
+  };
+
+  useEffect(() => {
+    const func = () => {
+      const getlocalStorage = localStorage.getItem('favoriteRecipes');
+      const parseLocal = JSON.parse(getlocalStorage);
+      if (parseLocal !== null) {
+        setIsFavorite(parseLocal.some((item) => (item.id === currentId)));
+      }
+    };
+    func();
+  }, []);
+
+  const removeFav = () => {
+    removeFavoriteMeal(mealDetails);
+    setIsFavorite(false);
+  };
+
   return (
     <div>
       { mealDetails && mealDetails.map((item, index) => (
@@ -112,6 +146,8 @@ function FoodsInProgress({ currentId }) {
           <h3 data-testid="recipe-title">{item.strMeal}</h3>
           <button
             type="button"
+            className="details-btn"
+            onClick={ copyToClipboard }
             data-testid="share-btn"
           >
             <img
@@ -119,15 +155,34 @@ function FoodsInProgress({ currentId }) {
               alt="Share"
             />
           </button>
-          <button
-            type="button"
-            data-testid="favorite-btn"
-          >
-            <img
+          { isFavorite === false ? (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
+              src={ whiteHeartIcon }
+              onClick={ addFav }
+            >
+              <img
+                src={ whiteHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
               src={ blackHeartIcon }
-              alt="Share"
-            />
-          </button>
+              onClick={ removeFav }
+            >
+              <img
+                src={ blackHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          )}
+          {isCopied && <MessageLinkCopied />}
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
             {mealIng.map((detail, i) => (
@@ -138,17 +193,14 @@ function FoodsInProgress({ currentId }) {
                 <li>
                   <input
                     type="checkbox"
-                    id={ detail.ingredient }
                     name={ detail.ingredient }
                     onChange={ pushCheck }
                     checked={ checkedHandle(detail.ingredient) }
+                    className="ingredients"
                   />
-                  <span style={ risco }>
-                    {/* style={ document.getElementById(`${detail.ingredient}`).checked
-                      ? { textDecoration: 'line-through' } : { color: 'black' } } */}
+                  <label htmlFor={ detail.ingredient }>
                     {`${detail.ingredient}: ${detail.measure}`}
-
-                  </span>
+                  </label>
 
                 </li>
               </div>
