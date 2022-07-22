@@ -1,15 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import getMealApi from '../service/MealApi';
+import getDrinkApi from '../service/DrinkApi';
 
 function FoodDetails({ recipeID, startRecipeBtn }) {
-  const { recipeDetails, setRecipeDetails,
-    detailsArray, setDetailsArray } = useContext(globalContext);
+  const { mealDetails,
+    setMealDetails,
+    setDataDrinks,
+    dataDrinks,
+    setDrinkID,
+    mealIng,
+    setMealIng } = useContext(globalContext);
+  const history = useHistory();
+  const SEIS = 6;
 
   useEffect(() => {
-    const mealDetails = async (id) => {
+    const fetchMealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
       const array = Object.entries(mealApi.meals[0])
         .map((detail) => detail);
@@ -18,16 +27,24 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayMea = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+      setMealIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayMea[i]}` })));
-      setRecipeDetails(mealApi.meals);
+      setMealDetails(mealApi.meals);
     };
-    mealDetails(recipeID);
+    fetchMealDetails(recipeID);
+  }, []);
+
+  useEffect(() => {
+    const recomendationCards = async () => {
+      const rec = await getDrinkApi('name', '');
+      setDataDrinks(rec.drinks);
+    };
+    recomendationCards();
   }, []);
 
   return (
     <div>
-      { recipeDetails && recipeDetails.map((item, index) => (
+      { mealDetails && mealDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strMealThumb }
@@ -38,10 +55,10 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           <p data-testid="recipe-category">{item.strCategory}</p>
           {/* Os ingredientes devem possuir o atribut data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
-            {detailsArray.map((detail, i = 1) => (
+            {mealIng.map((detail, i = 1) => (
               <li
                 key={ i }
-                data-testid={ `${index}-ingredient-name-and-measure` }
+                data-testid={ `${i}-ingredient-name-and-measure` }
               >
                 {`${detail.ingredient}: ${detail.measure}`}
 
@@ -56,9 +73,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
             src={ `https://www.youtube.com/embed/${item.strYoutube.split('https://www.youtube.com/watch?v=')[1]}` }
             title={ item.strMeal }
           />
-          {/* <div data-testid="${index}-recomendation-card">
-            {item.strRecomendation}
-          </div> */}
+
           <button
             type="button"
             data-testid="start-recipe-btn"
@@ -68,6 +83,33 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
+      {dataDrinks && dataDrinks.map((drink, index) => (
+        index < SEIS && (
+          <div
+            role="button"
+            tabIndex={ 0 } // Lint issue
+            key={ drink.idDrink }
+            data-testid={ `${index}-recomendation-card` }
+            onClick={ () => {
+              setDrinkID(drink.idDrink);
+              history.push(`/drinks/${drink.idDrink}`);
+            } }
+            onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
+          >
+            <img
+              width="150px"
+              data-testid={ `${index}-card-img` }
+              src={ drink.strDrinkThumb }
+              alt={ `drink-${index}` }
+            />
+            <h2
+              data-testid={ `${index}-card-name` }
+            >
+              {drink.strDrink}
+
+            </h2>
+          </div>)
+      ))}
     </div>
   );
 }

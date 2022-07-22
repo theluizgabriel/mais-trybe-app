@@ -1,22 +1,19 @@
-body > #root > div {
+body {
   height: 100vh;
 }
 
 .login-page {
   align-items: center;
-  background-image: url(background.jpg);
-  background-size: 100vh;
-  background-repeat: no-repeat;
+  background-image: url('background.jpg');
   background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100vh;
   border: red solid;
   height: 100%;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: end; */
   width: 100vh;
 }
 
-.user-input , .password-input{
+.user-input, .password-input {
   border: none;
   border-radius: 13px;
   color: black;
@@ -47,7 +44,7 @@ body > #root > div {
   text-align: center;
 }
 
-#Title {
+.Title {
   text-align: center;
 }
 
@@ -67,8 +64,8 @@ body > #root > div {
 .categories {
   border: none;
   border-radius: 13px;
-  padding: 5px;
   margin: 5px 7px;
+  padding: 5px;
   width: 30%;
 }
 
@@ -99,11 +96,10 @@ body > #root > div {
 }
 
 /* .search-bar */
-
 .footer {
-  bottom: 0;
-  position: fixed;
   background-color: #d6d6d6;
+  bottom: 0;
   padding: 10px;
+  position: fixed;
   width: 100%;
 }

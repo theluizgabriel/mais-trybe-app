@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
@@ -6,11 +7,12 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getDrinkApi from '../service/DrinkApi';
 
 function DrinksInProgress({ currentId }) {
-  const { recipeDetails, detailsArray,
-    setDetailsArray, setRecipeDetails } = useContext(globalContext);
+  const { drinkDetails, drinkIng,
+    setDrinkIng, setDrinkDetails } = useContext(globalContext);
+  const [checkIng, setCheckIng] = useState([]);
 
   useEffect(() => {
-    const drinkDetails = async (id) => {
+    const fetchDrinkDetails = async (id) => {
       const drinkApi = await getDrinkApi('details', id);
       const array = Object.entries(drinkApi.drinks[0])
         .map((detail) => detail);
@@ -20,11 +22,11 @@ function DrinksInProgress({ currentId }) {
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayDri = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+      setDrinkIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayDri[i]}` })));
-      setRecipeDetails(drinkApi.drinks);
+      setDrinkDetails(drinkApi.drinks);
     };
-    drinkDetails(currentId);
+    fetchDrinkDetails(currentId);
   }, []);
 
   const pushCheck = ({ target: { name } }) => {
@@ -37,6 +39,7 @@ function DrinksInProgress({ currentId }) {
         },
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
+      setCheckIng(estrutura.cocktails[currentId]);
     } else {
       const idsOnStorage = Object.keys(getItem.cocktails)
         .some((key) => key === currentId);
@@ -51,6 +54,7 @@ function DrinksInProgress({ currentId }) {
               [currentId]: [...excluirIng],
             },
           };
+          setCheckIng(estruturaExcluir.cocktails[currentId]);
           return localStorage.setItem('inProgressRecipes', JSON
             .stringify(estruturaExcluir));
         }
@@ -61,6 +65,7 @@ function DrinksInProgress({ currentId }) {
             [currentId]: [...getItem.cocktails[currentId], name],
           },
         };
+        setCheckIng(estrutura.cocktails[currentId]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       } else {
@@ -71,22 +76,32 @@ function DrinksInProgress({ currentId }) {
             [currentId]: [name],
           },
         };
+        setCheckIng(estrutura.cocktails[currentId]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       }
     }
   };
 
-  const checkedHandle = (ing) => {
+  useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (getItem && getItem.cocktails) {
-      return getItem.cocktails[currentId].includes(ing);
+      const id = Object.keys(getItem.cocktails).includes(currentId);
+      if (id === true) {
+        setCheckIng(getItem.cocktails[currentId]);
+      }
+    }
+  }, []);
+
+  const checkedHandle = (ing) => {
+    if (checkIng) {
+      return checkIng.some((itemIng) => itemIng === ing);
     }
   };
 
   return (
-    <>
-      { recipeDetails.map((item, index) => (
+    <div>
+      { drinkDetails && drinkDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strDrinkThumb }
@@ -114,7 +129,7 @@ function DrinksInProgress({ currentId }) {
           </button>
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
-            {detailsArray.map((detail, i) => (
+            {drinkIng.map((detail, i) => (
               <div
                 key={ i }
                 data-testid={ `${i}-ingredient-step` }
@@ -142,7 +157,7 @@ function DrinksInProgress({ currentId }) {
           </button>
         </div>
       )) }
-    </>
+    </div>
   );
 }
 

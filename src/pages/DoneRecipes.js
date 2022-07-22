@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DoneCards from '../components/DoneCards';
 import Header from '../components/Header';
+import globalContext from '../context/globalContext';
 import '../styles/doneRecipes.css';
 
 function RecipesDone() {
+  const { setTitle, setShowSearch } = useContext(globalContext);
   const recipes = JSON.parse(localStorage.getItem('doneRecipes'));
   const [doneRecipes, setDoneRecipes] = useState(recipes);
   const [filters, setFilters] = useState('all');
+
+  useEffect(() => {
+    setTitle('Done Recipes');
+    setShowSearch(false);
+  }, []);
 
   useEffect(() => {
     if (filters === 'all') {
