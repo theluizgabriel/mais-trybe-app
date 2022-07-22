@@ -118,6 +118,7 @@ function DrinksInProgress({ currentId }) {
               <div
                 key={ i }
                 data-testid={ `${i}-ingredient-step` }
+                className="ingredients"
               >
                 <li>
                   <input

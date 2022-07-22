@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
@@ -8,6 +8,7 @@ import getMealApi from '../service/MealApi';
 function FoodsInProgress({ currentId }) {
   const { recipeDetails, detailsArray,
     setDetailsArray, setRecipeDetails } = useContext(globalContext);
+  const [arrayStorage, setArrayStorage] = useState([]);
 
   useEffect(() => {
     const mealDetails = async (id) => {
@@ -23,6 +24,7 @@ function FoodsInProgress({ currentId }) {
       setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayMea[i]}` })));
       setRecipeDetails(mealApi.meals);
+      setArrayStorage(JSON.parse(localStorage.getItem('inProgressRecipes')));
     };
     mealDetails(currentId);
   }, []);
@@ -36,6 +38,7 @@ function FoodsInProgress({ currentId }) {
           [currentId]: [name],
         },
       };
+      setArrayStorage(estrutura);
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
     } if (getItem.meals) {
       const idsOnStorage = Object.keys(getItem.meals)
@@ -51,6 +54,7 @@ function FoodsInProgress({ currentId }) {
               [currentId]: [...excluirIng],
             },
           };
+          setArrayStorage(estruturaExcluir);
           return localStorage.setItem('inProgressRecipes', JSON
             .stringify(estruturaExcluir));
         }
@@ -61,6 +65,7 @@ function FoodsInProgress({ currentId }) {
             [currentId]: [...getItem.meals[currentId], name],
           },
         };
+        setArrayStorage(estrutura);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       } else {
@@ -71,6 +76,7 @@ function FoodsInProgress({ currentId }) {
             [currentId]: [name],
           },
         };
+        setArrayStorage(estrutura);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       }
@@ -122,11 +128,17 @@ function FoodsInProgress({ currentId }) {
                 <li>
                   <input
                     type="checkbox"
+                    id={ detail.ingredient }
                     name={ detail.ingredient }
                     onChange={ pushCheck }
                     checked={ checkedHandle(detail.ingredient) }
                   />
-                  {`${detail.ingredient}: ${detail.measure}`}
+                  <span style={ risco }>
+                    {/* style={ document.getElementById(`${detail.ingredient}`).checked
+                      ? { textDecoration: 'line-through' } : { color: 'black' } } */}
+                    {`${detail.ingredient}: ${detail.measure}`}
+
+                  </span>
 
                 </li>
               </div>

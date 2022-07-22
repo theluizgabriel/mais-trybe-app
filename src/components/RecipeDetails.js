@@ -27,7 +27,7 @@ function RecipeDetails({ history }) {
 }
 
 RecipeDetails.propTypes = {
-  history: PropTypes.objectOf(PropTypes.number).isRequired,
+  history: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default RecipeDetails;
