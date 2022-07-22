@@ -108,7 +108,7 @@ function FoodsInProgress({ currentId }) {
   };
 
   const copyToClipboard = () => {
-    const url = history.location.pathname;
+    const url = history.location.pathname.replace('/in-progress', '');
     navigator.clipboard.writeText(`http://localhost:3000${url}`);
     setIsCopied(true);
   };
