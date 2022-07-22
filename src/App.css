@@ -108,3 +108,14 @@ body {
   position: fixed;
   width: 100%;
 }
+
+.recomendation-container {
+  border: red solid;
+  display: flex;
+  overflow: scroll;
+  width: 400px;
+}
+
+.carousel-item {
+padding-right: 50px;
+}

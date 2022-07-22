@@ -68,13 +68,13 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
 
   const addFavorite = () => {
     const mealInfo = {
-      id: recipeDetails[0].idMeal,
+      id: mealDetails[0].idMeal,
       type: 'food',
-      nationality: recipeDetails[0].strArea,
-      category: recipeDetails[0].strCategory,
+      nationality: mealDetails[0].strArea,
+      category: mealDetails[0].strCategory,
       alcoholicOrNot: '',
-      name: recipeDetails[0].strMeal,
-      image: recipeDetails[0].strMealThumb,
+      name: mealDetails[0].strMeal,
+      image: mealDetails[0].strMealThumb,
     };
     const getFavoriteRecipes = localStorage.getItem('favoriteRecipes');
     if (getFavoriteRecipes === null) {
@@ -92,7 +92,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     const parseLocal = JSON.parse(getlocalStorage);
     console.log(parseLocal);
     const newLocalStorage = parseLocal.filter(
-      (item) => item.id !== recipeDetails[0].idMeal,
+      (item) => item.id !== mealDetails[0].idMeal,
     );
     localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
     setIsFavorite(false);
@@ -184,33 +184,41 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
-      {dataDrinks && dataDrinks.map((drink, index) => (
-        index < SEIS && (
-          <div
-            role="button"
-            tabIndex={ 0 } // Lint issue
-            key={ drink.idDrink }
-            data-testid={ `${index}-recomendation-card` }
-            onClick={ () => {
-              setDrinkID(drink.idDrink);
-              history.push(`/drinks/${drink.idDrink}`);
-            } }
-            onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
-          >
-            <img
-              width="150px"
-              data-testid={ `${index}-card-img` }
-              src={ drink.strDrinkThumb }
-              alt={ `drink-${index}` }
-            />
-            <h2
-              data-testid={ `${index}-card-name` }
+      <div className="recomendation-container">
+        {dataDrinks && dataDrinks.map((drink, index) => (
+          index < SEIS && (
+            <div
+              className="carousel-item"
+              data-testid={ `${index}-recomendation-card` }
             >
-              {drink.strDrink}
+              <button
+                type="button"
+                // tabIndex={ 0 } // Lint issue
+                key={ drink.idDrink }
+                onClick={ () => {
+                  setDrinkID(drink.idDrink);
+                  history.push(`/drinks/${drink.idDrink}`);
+                } }
+              // onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
+              >
+                <img
+                  width="150px"
+                  data-testid={ `${index}-card-img` }
+                  src={ drink.strDrinkThumb }
+                  alt={ `drink-${index}` }
+                />
+                <h2
+                  data-testid={ `${index}-card-name` }
+                >
+                  {drink.strDrink}
 
-            </h2>
-          </div>)
-      ))}
+                </h2>
+              </button>
+            </div>
+          )
+
+        ))}
+      </div>
     </div>
   );
 }

@@ -58,13 +58,13 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
   // Salva a mesma receita a cada click
   const addFavorite = () => {
     const drinkInfo = {
-      id: recipeDetails[0].idDrink,
+      id: drinkDetails[0].idDrink,
       type: 'drink',
       nationality: '',
-      category: recipeDetails[0].strCategory,
-      alcoholicOrNot: recipeDetails[0].strAlcoholic,
-      name: recipeDetails[0].strDrink,
-      image: recipeDetails[0].strDrinkThumb,
+      category: drinkDetails[0].strCategory,
+      alcoholicOrNot: drinkDetails[0].strAlcoholic,
+      name: drinkDetails[0].strDrink,
+      image: drinkDetails[0].strDrinkThumb,
     };
     const getFavoriteRecipes = localStorage.getItem('favoriteRecipes');
     if (getFavoriteRecipes === null) {
@@ -93,7 +93,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     const parseLocal = JSON.parse(getlocalStorage);
     console.log(parseLocal);
     const newLocalStorage = parseLocal.filter(
-      (item) => item.id !== recipeDetails[0].idDrink,
+      (item) => item.id !== drinkDetails[0].idDrink,
     );
     localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
     setIsFavorite(false);
@@ -154,7 +154,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
               }
             </div>
           </div>
-
+          <p data-testid="recipe-category">{item.strAlcoholic}</p>
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
           <ul>
             {drinkIng.map((detail, i) => (
@@ -183,30 +183,29 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
       )) }
       { dataFoods && dataFoods.map((food, index) => (
         index < SEIS && (
-          <div
-            role="button"
-            tabIndex={ 0 } // Lint issue
-            key={ food.idMeal }
-            data-testid={ `${index}-recomendation-card` }
-            onClick={ () => {
-              setMealID(food.idMeal);
-              history.push(`/foods/${food.idMeal}`);
-            } }
-            className="food-card"
-            onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
-          >
-            <img
-              width="150px"
-              data-testid={ `${index}-card-img` }
-              src={ food.strMealThumb }
-              alt={ `food-${index}` }
-            />
-            <h2
-              data-testid={ `${index}-card-name` }
+          <div data-testid={ `${index}-recomendation-card` }>
+            <button
+              type="button"
+              // tabIndex={ 0 } // Lint issue
+              key={ food.idMeal }
+              onClick={ () => {
+                setMealID(food.idMeal);
+                history.push(`/foods/${food.idMeal}`);
+              } }
             >
-              {food.strMeal}
+              <img
+                width="150px"
+                data-testid={ `${index}-card-img` }
+                src={ food.strMealThumb }
+                alt={ `food-${index}` }
+              />
+              <h2
+                data-testid={ `${index}-card-name` }
+              >
+                {food.strMeal}
 
-            </h2>
+              </h2>
+            </button>
           </div>
         )
       )) }
