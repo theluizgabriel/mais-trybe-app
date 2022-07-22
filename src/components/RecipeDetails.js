@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DrinkDetails from './DrinkDetails';
@@ -9,7 +8,7 @@ function RecipeDetails({ history }) {
   const currentID = (history.location.pathname).split('/')[2];
 
   const startRecipeBtn = () => {
-    history.push(`/recipe-in-progress/${currentID}`);
+    history.push(`/${currentPage}/${currentID}/in-progress`);
   };
 
   return (

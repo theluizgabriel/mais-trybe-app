@@ -10,7 +10,10 @@ const useCustomHook = () => {
   const [foodsCategories, setFoodsCategories] = useState([]);
   const [drinksCategories, setDrinksCategories] = useState([]);
   const [currentID, setCurrentID] = useState([]);
-  const [recipeDetails, setRecipeDetails] = useState([]);
+  const [mealDetails, setMealDetails] = useState([]);
+  const [drinkDetails, setDrinkDetails] = useState([]);
+  const [mealIng, setMealIng] = useState([]);
+  const [drinkIng, setDrinkIng] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
   return { title,
@@ -31,8 +34,14 @@ const useCustomHook = () => {
     setDrinksCategories,
     currentID,
     setCurrentID,
-    recipeDetails,
-    setRecipeDetails,
+    mealDetails,
+    setMealDetails,
+    drinkDetails,
+    setDrinkDetails,
+    mealIng,
+    setMealIng,
+    drinkIng,
+    setDrinkIng,
     favoriteRecipes,
     setFavoriteRecipes };
 };

@@ -22,8 +22,14 @@ function GlobalProvider({ children }) {
     setDrinksCategories,
     currentID,
     setCurrentID,
-    recipeDetails,
-    setRecipeDetails,
+    mealDetails,
+    setMealDetails,
+    drinkDetails,
+    setDrinkDetails,
+    mealIng,
+    setMealIng,
+    drinkIng,
+    setDrinkIng,
     favoriteRecipes,
     setFavoriteRecipes } = useCustomHook();
 
@@ -46,8 +52,14 @@ function GlobalProvider({ children }) {
     setDrinksCategories,
     currentID,
     setCurrentID,
-    recipeDetails,
-    setRecipeDetails,
+    mealDetails,
+    setMealDetails,
+    drinkDetails,
+    setDrinkDetails,
+    mealIng,
+    setMealIng,
+    drinkIng,
+    setDrinkIng,
     favoriteRecipes,
     setFavoriteRecipes };
 

@@ -1,46 +1,59 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import globalContext from '../context/globalContext';
 import getDrinkApi from '../service/DrinkApi';
+import getMealApi from '../service/MealApi';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import MessageLinkCopied from './MessageLinkCopied';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
-  const {
-    recipeDetails,
-    setRecipeDetails,
-  } = useContext(globalContext);
-  const [detailsArray, setDetailsArray] = useState([]);
+  const { drinkDetails,
+    setDrinkDetails,
+    setDataFoods,
+    dataFoods,
+    setMealID,
+    drinkIng,
+    setDrinkIng } = useContext(globalContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const history = useHistory();
+  const SEIS = 6;
+
+  useEffect(() => {
+    const fetchDrinkDetails = async (id) => {
+      const drinkApi = await getDrinkApi('details', id);
+      const array = Object.entries(drinkApi.drinks[0])
+        .map((detail) => detail);
+      const arrayFilter1 = array.filter((a) => a[1] !== '' && ' ' && a[1] !== null);
+      const arrayIng = (arrayFilter1.filter((str) => (str[0]
+        .includes('strIngredient')))).map((b) => b[1]);
+      const arrayMea = (arrayFilter1.filter((str) => (str[0]
+        .includes('strMeasure')))).map((b) => b[1]);
+      setDrinkIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+        measure: `${arrayMea[i]}` })));
+      setDrinkDetails(drinkApi.drinks);
+    };
+    fetchDrinkDetails(recipeID);
+  }, []);
+
+  useEffect(() => {
+    const recomendationCards = async () => {
+      const rec = await getMealApi('name', '');
+      setDataFoods(rec.meals);
+    };
+    recomendationCards();
+  }, []);
 
   const copyToClipboard = () => {
     const url = history.location.pathname;
     navigator.clipboard.writeText(`http://localhost:3000${url}`);
     setIsCopied(true);
   };
-
-  useEffect(() => {
-    const drinkDetails = async (id) => {
-      const drinkApi = await getDrinkApi('details', id);
-      const array = Object.entries(drinkApi.drinks[0])
-        .map((detail) => detail);
-      const arrayFilter1 = array.filter((a) => a[1] !== '' && a[1] !== ' ');
-      const arrayIng = (arrayFilter1.filter((str) => (str[0]
-        .includes('strIngredient')))).map((b) => b[1]);
-      const arrayMea = (arrayFilter1.filter((str) => (str[0]
-        .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: a,
-        measure: arrayMea[i] })));
-      setRecipeDetails(drinkApi.drinks);
-    };
-    drinkDetails(recipeID);
-  }, []);
 
   // Salva a mesma receita a cada click
   const addFavorite = () => {
@@ -88,7 +101,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
 
   return (
     <div>
-      { recipeDetails && recipeDetails.map((item, index) => (
+      { drinkDetails && drinkDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strDrinkThumb }
@@ -141,15 +154,16 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
               }
             </div>
           </div>
-          <p data-testid="recipe-category">{item.strCategory}</p>
+
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
           <ul>
-            {detailsArray.map((detail, i = 1) => (
+            {drinkIng.map((detail, i) => (
               <li
                 key={ i }
-                data-testid={ `${index}-ingredient-name-and-measure` }
+                data-testid={ `${i}-ingredient-name-and-measure` }
               >
                 {`${detail.ingredient}: ${detail.measure}`}
+
               </li>
             ))}
           </ul>
@@ -167,8 +181,42 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
+      { dataFoods && dataFoods.map((food, index) => (
+        index < SEIS && (
+          <div
+            role="button"
+            tabIndex={ 0 } // Lint issue
+            key={ food.idMeal }
+            data-testid={ `${index}-recomendation-card` }
+            onClick={ () => {
+              setMealID(food.idMeal);
+              history.push(`/foods/${food.idMeal}`);
+            } }
+            className="food-card"
+            onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
+          >
+            <img
+              width="150px"
+              data-testid={ `${index}-card-img` }
+              src={ food.strMealThumb }
+              alt={ `food-${index}` }
+            />
+            <h2
+              data-testid={ `${index}-card-name` }
+            >
+              {food.strMeal}
+
+            </h2>
+          </div>
+        )
+      )) }
     </div>
   );
 }
+
+DrinkDetails.propTypes = {
+  recipeID: PropTypes.string.isRequired,
+  startRecipeBtn: PropTypes.func.isRequired,
+};
 
 export default DrinkDetails;
