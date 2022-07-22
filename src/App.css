@@ -95,6 +95,11 @@ body {
   width: 100%;
 }
 
+.start-recipe-btn {
+  bottom: 0;
+  position: fixed;
+}
+
 /* .search-bar */
 .footer {
   background-color: #d6d6d6;
@@ -102,4 +107,15 @@ body {
   padding: 10px;
   position: fixed;
   width: 100%;
+}
+
+.recomendation-container {
+  border: red solid;
+  display: flex;
+  overflow: scroll;
+  width: 400px;
+}
+
+.carousel-item {
+padding-right: 50px;
 }
