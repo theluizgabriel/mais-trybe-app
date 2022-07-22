@@ -12,8 +12,8 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     setDataFoods,
     dataFoods,
     setMealID,
-    detailsArray,
-    setDetailsArray } = useContext(globalContext);
+    drinkIng,
+    setDrinkIng } = useContext(globalContext);
   const history = useHistory();
   const SEIS = 6;
 
@@ -27,7 +27,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayMea = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+      setDrinkIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayMea[i]}` })));
       setDrinkDetails(drinkApi.drinks);
     };
@@ -52,13 +52,18 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
             data-testid="recipe-photo"
           />
           <h3 data-testid="recipe-title">{item.strDrink}</h3>
-          <p data-testid="recipe-category">{item.strCategory}</p>
+          <p data-testid="recipe-category">
+            {item.strCategory}
+            ,
+            {' '}
+            {item.strAlcoholic}
+          </p>
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
           <ul>
-            {detailsArray.map((detail, i = 1) => (
+            {drinkIng.map((detail, i) => (
               <li
                 key={ i }
-                data-testid={ `${index}-ingredient-name-and-measure` }
+                data-testid={ `${i}-ingredient-name-and-measure` }
               >
                 {`${detail.ingredient}: ${detail.measure}`}
 

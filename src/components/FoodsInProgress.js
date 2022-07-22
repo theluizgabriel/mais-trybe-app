@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
@@ -6,11 +7,12 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getMealApi from '../service/MealApi';
 
 function FoodsInProgress({ currentId }) {
-  const { recipeDetails, detailsArray,
-    setDetailsArray, setRecipeDetails } = useContext(globalContext);
+  const { mealDetails, mealIng,
+    setMealIng, setMealDetails } = useContext(globalContext);
+  const [checkIng, setCheckIng] = useState([]);
 
   useEffect(() => {
-    const mealDetails = async (id) => {
+    const fetchMealDetails = async (id) => {
       const mealApi = await getMealApi('details', id);
       const array = Object.entries(mealApi.meals[0])
         .map((detail) => detail);
@@ -20,11 +22,11 @@ function FoodsInProgress({ currentId }) {
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayMea = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+      setMealIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayMea[i]}` })));
-      setRecipeDetails(mealApi.meals);
+      setMealDetails(mealApi.meals);
     };
-    mealDetails(currentId);
+    fetchMealDetails(currentId);
   }, []);
 
   const pushCheck = ({ target: { name } }) => {
@@ -37,6 +39,7 @@ function FoodsInProgress({ currentId }) {
         },
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(estrutura));
+      setCheckIng(estrutura.meals[currentId]);
     } if (getItem.meals) {
       const idsOnStorage = Object.keys(getItem.meals)
         .some((key) => key === currentId);
@@ -51,6 +54,7 @@ function FoodsInProgress({ currentId }) {
               [currentId]: [...excluirIng],
             },
           };
+          setCheckIng(estruturaExcluir.meals[currentId]);
           return localStorage.setItem('inProgressRecipes', JSON
             .stringify(estruturaExcluir));
         }
@@ -61,6 +65,7 @@ function FoodsInProgress({ currentId }) {
             [currentId]: [...getItem.meals[currentId], name],
           },
         };
+        setCheckIng(estrutura.meals[currentId]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       } else {
@@ -71,22 +76,32 @@ function FoodsInProgress({ currentId }) {
             [currentId]: [name],
           },
         };
+        setCheckIng(estrutura.meals[currentId]);
         localStorage.setItem('inProgressRecipes', JSON
           .stringify(estrutura));
       }
     }
   };
 
-  const checkedHandle = (ing) => {
+  useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (getItem && getItem.meals) {
-      return getItem.meals[currentId].includes(ing);
+      const id = Object.keys(getItem.meals).includes(currentId);
+      if (id === true) {
+        setCheckIng(getItem.meals[currentId]);
+      }
+    }
+  }, []);
+
+  const checkedHandle = (ing) => {
+    if (checkIng) {
+      return checkIng.some((itemIng) => itemIng === ing);
     }
   };
 
   return (
-    <>
-      { recipeDetails.map((item, index) => (
+    <div>
+      { mealDetails && mealDetails.map((item, index) => (
         <div key={ index }>
           <img
             src={ item.strMealThumb }
@@ -114,7 +129,7 @@ function FoodsInProgress({ currentId }) {
           </button>
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
-            {detailsArray.map((detail, i) => (
+            {mealIng.map((detail, i) => (
               <div
                 key={ i }
                 data-testid={ `${i}-ingredient-step` }
@@ -142,7 +157,7 @@ function FoodsInProgress({ currentId }) {
           </button>
         </div>
       )) }
-    </>
+    </div>
   );
 }
 

@@ -12,8 +12,8 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     setDataDrinks,
     dataDrinks,
     setDrinkID,
-    detailsArray,
-    setDetailsArray } = useContext(globalContext);
+    mealIng,
+    setMealIng } = useContext(globalContext);
   const history = useHistory();
   const SEIS = 6;
 
@@ -27,7 +27,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
         .includes('strIngredient')))).map((b) => b[1]);
       const arrayMea = (arrayFilter1.filter((str) => (str[0]
         .includes('strMeasure')))).map((b) => b[1]);
-      setDetailsArray(arrayIng.map((a, i) => ({ ingredient: `${a}`,
+      setMealIng(arrayIng.map((a, i) => ({ ingredient: `${a}`,
         measure: `${arrayMea[i]}` })));
       setMealDetails(mealApi.meals);
     };
@@ -55,10 +55,10 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
           <p data-testid="recipe-category">{item.strCategory}</p>
           {/* Os ingredientes devem possuir o atribut data-testid="${index}-ingredient-name-and-measure"; */}
           <ul>
-            {detailsArray.map((detail, i = 1) => (
+            {mealIng.map((detail, i = 1) => (
               <li
                 key={ i }
-                data-testid={ `${index}-ingredient-name-and-measure` }
+                data-testid={ `${i}-ingredient-name-and-measure` }
               >
                 {`${detail.ingredient}: ${detail.measure}`}
 
@@ -73,9 +73,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
             src={ `https://www.youtube.com/embed/${item.strYoutube.split('https://www.youtube.com/watch?v=')[1]}` }
             title={ item.strMeal }
           />
-          {/* <div data-testid="${index}-recomendation-card">
-            {item.strRecomendation}
-          </div> */}
+
           <button
             type="button"
             data-testid="start-recipe-btn"
