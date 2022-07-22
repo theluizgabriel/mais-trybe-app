@@ -140,8 +140,11 @@ function DrinksInProgress({ currentId }) {
                     name={ detail.ingredient }
                     onChange={ pushCheck }
                     checked={ checkedHandle(detail.ingredient) }
+                    className="ingredients-done"
                   />
-                  {`${detail.ingredient}: ${detail.measure}`}
+                  <label htmlFor={ detail.ingredient }>
+                    {`${detail.ingredient}: ${detail.measure}`}
+                  </label>
                 </li>
               </div>
             ))}

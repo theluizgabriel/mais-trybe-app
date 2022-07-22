@@ -7,8 +7,9 @@ const DOZE = 12;
 function CardsDrinks() {
   const history = useHistory();
   const { dataDrinks, setDrinkID } = useContext(globalContext);
+
   return (
-    <div>
+    <div className="recipes">
       {dataDrinks && dataDrinks.map((drink, index) => (
         index < DOZE && (
           <div
@@ -20,6 +21,7 @@ function CardsDrinks() {
               setDrinkID(drink.idDrink);
               history.push(`/drinks/${drink.idDrink}`);
             } }
+            className="recipe-card"
             onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
           >
             <img
