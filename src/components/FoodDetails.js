@@ -106,6 +106,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
             src={ item.strMealThumb }
             alt={ item.strMeal }
             data-testid="recipe-photo"
+            className="recipe-photo"
           />
           <div id="topper">
             <h3 data-testid="recipe-title">{item.strMeal}</h3>
@@ -161,7 +162,6 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                 data-testid={ `${i}-ingredient-name-and-measure` }
               >
                 {`${detail.ingredient}: ${detail.measure}`}
-
               </li>
             ))}
           </ul>
@@ -188,18 +188,16 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
         {dataDrinks && dataDrinks.map((drink, index) => (
           index < SEIS && (
             <div
-              className="carousel-item"
+              className="recomendation-item"
               data-testid={ `${index}-recomendation-card` }
             >
               <button
                 type="button"
-                // tabIndex={ 0 } // Lint issue
                 key={ drink.idDrink }
                 onClick={ () => {
                   setDrinkID(drink.idDrink);
                   history.push(`/drinks/${drink.idDrink}`);
                 } }
-              // onKeyPress={ () => { history.push(`/drinks/${drink.idDrink}`); } } // Lint issue
               >
                 <img
                   width="150px"
@@ -207,11 +205,8 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
                   src={ drink.strDrinkThumb }
                   alt={ `drink-${index}` }
                 />
-                <h2
-                  data-testid={ `${index}-card-name` }
-                >
+                <h2 data-testid={ `${index}-recomendation-title` }>
                   {drink.strDrink}
-
                 </h2>
               </button>
             </div>
