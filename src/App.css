@@ -69,13 +69,13 @@ body {
   width: 30%;
 }
 
-.meals {
+.recipes {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
 
-.food-card {
+.recipe-card {
   align-items: center;
   border-radius: 13px;
   box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.7);
@@ -109,15 +109,25 @@ body {
   width: 100%;
 }
 
+.recipe-photo {
+  width: 300px;
+}
+
 .recomendation-container {
-  border: red solid;
+  border: white solid;
   display: flex;
-  overflow: scroll;
+  overflow: hidden;
+  width: 420px;
+}
+
+.recomendation-item {
+  border: white solid;
+  margin: 0 16px;
   width: 400px;
 }
 
-.carousel-item {
-padding-right: 50px;
+.ingredients-done:checked + label {
+  text-decoration: line-through;
 }
 
 .ingredients:checked + label {

@@ -201,7 +201,6 @@ function FoodsInProgress({ currentId }) {
                   <label htmlFor={ detail.ingredient }>
                     {`${detail.ingredient}: ${detail.measure}`}
                   </label>
-
                 </li>
               </div>
             ))}

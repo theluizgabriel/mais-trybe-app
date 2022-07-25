@@ -9,7 +9,7 @@ function CardsFoods() {
   const { dataFoods, setMealID } = useContext(globalContext);
 
   return (
-    <div className="meals">
+    <div className="recipes">
       { dataFoods && dataFoods.map((food, index) => (
         index < DOZE && (
           <div
@@ -21,7 +21,7 @@ function CardsFoods() {
               setMealID(food.idMeal);
               history.push(`/foods/${food.idMeal}`);
             } }
-            className="food-card"
+            className="recipe-card"
             onKeyPress={ () => { history.push(`/foods/${food.idMeal}`); } } // Lint issue
           >
             <img
@@ -36,9 +36,8 @@ function CardsFoods() {
               {food.strMeal}
 
             </h2>
-          </div>
-        )
-      )) }
+          </div>)
+      ))}
     </div>);
 }
 

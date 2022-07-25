@@ -86,6 +86,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
             src={ item.strDrinkThumb }
             alt={ item.strDrink }
             data-testid="recipe-photo"
+            className="recipe-photo"
           />
           <div id="topper">
             <h3 data-testid="recipe-title">{item.strDrink}</h3>
@@ -160,34 +161,39 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
-      { dataFoods && dataFoods.map((food, index) => (
-        index < SEIS && (
-          <div data-testid={ `${index}-recomendation-card` }>
-            <button
-              type="button"
-              // tabIndex={ 0 } // Lint issue
-              key={ food.idMeal }
-              onClick={ () => {
-                setMealID(food.idMeal);
-                history.push(`/foods/${food.idMeal}`);
-              } }
+      <div className="recomendation-container">
+        { dataFoods && dataFoods.map((food, index) => (
+          index < SEIS && (
+            <div
+              data-testid={ `${index}-recomendation-card` }
+              className="recomendation-item"
             >
-              <img
-                width="150px"
-                data-testid={ `${index}-card-img` }
-                src={ food.strMealThumb }
-                alt={ `food-${index}` }
-              />
-              <h2
-                data-testid={ `${index}-card-name` }
+              <button
+                type="button"
+                // tabIndex={ 0 } // Lint issue
+                key={ food.idMeal }
+                onClick={ () => {
+                  setMealID(food.idMeal);
+                  history.push(`/foods/${food.idMeal}`);
+                } }
               >
-                {food.strMeal}
+                <img
+                  width="150px"
+                  data-testid={ `${index}-card-img` }
+                  src={ food.strMealThumb }
+                  alt={ `food-${index}` }
+                />
+                <h2
+                  data-testid={ `${index}-recomendation-title` }
+                >
+                  {food.strMeal}
 
-              </h2>
-            </button>
-          </div>
-        )
-      )) }
+                </h2>
+              </button>
+            </div>
+          )
+        )) }
+      </div>
     </div>
   );
 }
