@@ -46,29 +46,31 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <input
-        type="email"
-        data-testid="email-input"
-        name="email"
-        value={ email }
-        className="user-input"
-        placeholder="exemplo@exemplo.com"
-        onChange={ handleChange }
-      />
-      <input
-        type="password"
-        data-testid="password-input"
-        name="password"
-        value={ password }
-        className="password-input"
-        placeholder="Digite sua senha"
-        onChange={ handleChange }
-      />
+    <div className="flex flex-col">
+      <div className="flex flex-col">
+        <input
+          type="email"
+          data-testid="email-input"
+          name="email"
+          value={ email }
+          className=""
+          placeholder="exemplo@exemplo.com"
+          onChange={ handleChange }
+        />
+        <input
+          type="password"
+          data-testid="password-input"
+          name="password"
+          value={ password }
+          className=""
+          placeholder="Digite sua senha"
+          onChange={ handleChange }
+        />
+      </div>
       <button
         type="submit"
         data-testid="login-submit-btn"
-        className="login-btn"
+        className=""
         disabled={ !enabled }
         onClick={ handleButtonClick }
       >
