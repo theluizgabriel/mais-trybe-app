@@ -23,6 +23,7 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     setMealIng } = useContext(globalContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isInProgress, setIsInProgress] = useState(false);
   const history = useHistory();
   const SEIS = 6;
 
@@ -77,6 +78,18 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
     removeFavoriteMeal(mealDetails);
     setIsFavorite(false);
   };
+
+  useEffect(() => {
+    const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (getItem && getItem.meals) {
+      const id = Object.keys(getItem.meals).includes(recipeID);
+      if (id === true) {
+        setIsInProgress(true);
+      } else {
+        setIsInProgress(false);
+      }
+    }
+  }, []);
 
   return (
     <div>
@@ -160,7 +173,8 @@ function FoodDetails({ recipeID, startRecipeBtn }) {
             className="start-recipe-btn"
             onClick={ startRecipeBtn }
           >
-            Start Recipe
+            { isInProgress
+              ? 'Continue Recipe' : 'Start Recipe'}
           </button>
         </div>
       )) }

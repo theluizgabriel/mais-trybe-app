@@ -16,6 +16,7 @@ function DrinksInProgress({ currentId }) {
   const { drinkDetails, drinkIng,
     setDrinkIng, setDrinkDetails } = useContext(globalContext);
   const [checkIng, setCheckIng] = useState([]);
+  const [isFinishButtonDisabled, setIsFinishButtonDisabled] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -92,6 +93,15 @@ function DrinksInProgress({ currentId }) {
   };
 
   useEffect(() => {
+    if (checkIng.length === drinkIng.length) {
+      setIsFinishButtonDisabled(false);
+    } else {
+      setIsFinishButtonDisabled(true);
+    }
+  },
+  [checkIng]);
+
+  useEffect(() => {
     const getItem = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (getItem && getItem.cocktails) {
       const id = Object.keys(getItem.cocktails).includes(currentId);
@@ -107,6 +117,9 @@ function DrinksInProgress({ currentId }) {
     }
   };
 
+  const finishButton = () => {
+    history.push('/done-recipes');
+  };
   const copyToClipboard = () => {
     const url = history.location.pathname.replace('/in-progress', '');
     navigator.clipboard.writeText(`http://localhost:3000${url}`);
@@ -208,6 +221,8 @@ function DrinksInProgress({ currentId }) {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            disabled={ isFinishButtonDisabled }
+            onClick={ finishButton }
           >
             Finish
 
