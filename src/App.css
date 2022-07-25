@@ -129,3 +129,7 @@ body {
 .ingredients-done:checked + label {
   text-decoration: line-through;
 }
+
+.ingredients:checked + label {
+  text-decoration: line-through;
+}
