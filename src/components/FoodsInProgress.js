@@ -6,6 +6,10 @@ import globalContext from '../context/globalContext';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import getMealApi from '../service/MealApi';
+import MessageLinkCopied from './MessageLinkCopied';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import addFavoriteMeal from '../service/AddFavoriteMeal';
+import removeFavoriteMeal from '../service/RemoveFavoriteMeal';
 
 function FoodsInProgress({ currentId }) {
   const history = useHistory();
@@ -13,6 +17,8 @@ function FoodsInProgress({ currentId }) {
     setMealIng, setMealDetails } = useContext(globalContext);
   const [checkIng, setCheckIng] = useState([]);
   const [isFinishButtonDisabled, setIsFinishButtonDisabled] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const fetchMealDetails = async (id) => {
@@ -114,6 +120,32 @@ function FoodsInProgress({ currentId }) {
   const finishButton = () => {
     history.push('/done-recipes');
   };
+  const copyToClipboard = () => {
+    const url = history.location.pathname.replace('/in-progress', '');
+    navigator.clipboard.writeText(`http://localhost:3000${url}`);
+    setIsCopied(true);
+  };
+
+  const addFav = () => {
+    addFavoriteMeal(mealDetails);
+    setIsFavorite(true);
+  };
+
+  useEffect(() => {
+    const func = () => {
+      const getlocalStorage = localStorage.getItem('favoriteRecipes');
+      const parseLocal = JSON.parse(getlocalStorage);
+      if (parseLocal !== null) {
+        setIsFavorite(parseLocal.some((item) => (item.id === currentId)));
+      }
+    };
+    func();
+  }, []);
+
+  const removeFav = () => {
+    removeFavoriteMeal(mealDetails);
+    setIsFavorite(false);
+  };
 
   return (
     <div>
@@ -127,6 +159,8 @@ function FoodsInProgress({ currentId }) {
           <h3 data-testid="recipe-title">{item.strMeal}</h3>
           <button
             type="button"
+            className="details-btn"
+            onClick={ copyToClipboard }
             data-testid="share-btn"
           >
             <img
@@ -134,15 +168,34 @@ function FoodsInProgress({ currentId }) {
               alt="Share"
             />
           </button>
-          <button
-            type="button"
-            data-testid="favorite-btn"
-          >
-            <img
+          { isFavorite === false ? (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
+              src={ whiteHeartIcon }
+              onClick={ addFav }
+            >
+              <img
+                src={ whiteHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="details-btn"
+              data-testid="favorite-btn"
               src={ blackHeartIcon }
-              alt="Share"
-            />
-          </button>
+              onClick={ removeFav }
+            >
+              <img
+                src={ blackHeartIcon }
+                alt="Profile Icon"
+              />
+            </button>
+          )}
+          {isCopied && <MessageLinkCopied />}
           <p data-testid="recipe-category">{item.strCategory}</p>
           <ul>
             {mealIng.map((detail, i) => (
@@ -156,9 +209,11 @@ function FoodsInProgress({ currentId }) {
                     name={ detail.ingredient }
                     onChange={ pushCheck }
                     checked={ checkedHandle(detail.ingredient) }
+                    className="ingredients"
                   />
-                  {`${detail.ingredient}: ${detail.measure}`}
-
+                  <label htmlFor={ detail.ingredient }>
+                    {`${detail.ingredient}: ${detail.measure}`}
+                  </label>
                 </li>
               </div>
             ))}

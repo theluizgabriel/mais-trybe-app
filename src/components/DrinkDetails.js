@@ -10,6 +10,8 @@ import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import MessageLinkCopied from './MessageLinkCopied';
+import addFavoriteDrink from '../service/AddFavoriteDrink';
+import removeFavoriteDrink from '../service/RemoveFavoriteDrink';
 
 function DrinkDetails({ recipeID, startRecipeBtn }) {
   const { drinkDetails,
@@ -56,25 +58,8 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     setIsCopied(true);
   };
 
-  // Salva a mesma receita a cada click
-  const addFavorite = () => {
-    const drinkInfo = {
-      id: drinkDetails[0].idDrink,
-      type: 'drink',
-      nationality: '',
-      category: drinkDetails[0].strCategory,
-      alcoholicOrNot: drinkDetails[0].strAlcoholic,
-      name: drinkDetails[0].strDrink,
-      image: drinkDetails[0].strDrinkThumb,
-    };
-    const getFavoriteRecipes = localStorage.getItem('favoriteRecipes');
-    if (getFavoriteRecipes === null) {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([drinkInfo]));
-    } else {
-      const parse = JSON.parse(getFavoriteRecipes);
-      const prevLocalStorage = [...parse, drinkInfo];
-      localStorage.setItem('favoriteRecipes', JSON.stringify(prevLocalStorage));
-    }
+  const addFav = () => {
+    addFavoriteDrink(drinkDetails);
     setIsFavorite(true);
   };
 
@@ -89,14 +74,8 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
     func();
   }, []);
 
-  const removeFavorite = () => {
-    const getlocalStorage = localStorage.getItem('favoriteRecipes');
-    const parseLocal = JSON.parse(getlocalStorage);
-    console.log(parseLocal);
-    const newLocalStorage = parseLocal.filter(
-      (item) => item.id !== drinkDetails[0].idDrink,
-    );
-    localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalStorage));
+  const removeFav = () => {
+    removeFavoriteDrink(drinkDetails);
     setIsFavorite(false);
   };
 
@@ -120,6 +99,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
             src={ item.strDrinkThumb }
             alt={ item.strDrink }
             data-testid="recipe-photo"
+            className="recipe-photo"
           />
           <div id="topper">
             <h3 data-testid="recipe-title">{item.strDrink}</h3>
@@ -141,7 +121,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
                   className="details-btn"
                   data-testid="favorite-btn"
                   src={ whiteHeartIcon }
-                  onClick={ addFavorite }
+                  onClick={ addFav }
                 >
                   <img
                     src={ whiteHeartIcon }
@@ -154,7 +134,7 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
                   className="details-btn"
                   data-testid="favorite-btn"
                   src={ blackHeartIcon }
-                  onClick={ removeFavorite }
+                  onClick={ removeFav }
                 >
                   <img
                     src={ blackHeartIcon }
@@ -195,34 +175,39 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
-      { dataFoods && dataFoods.map((food, index) => (
-        index < SEIS && (
-          <div data-testid={ `${index}-recomendation-card` }>
-            <button
-              type="button"
-              // tabIndex={ 0 } // Lint issue
-              key={ food.idMeal }
-              onClick={ () => {
-                setMealID(food.idMeal);
-                history.push(`/foods/${food.idMeal}`);
-              } }
+      <div className="recomendation-container">
+        { dataFoods && dataFoods.map((food, index) => (
+          index < SEIS && (
+            <div
+              data-testid={ `${index}-recomendation-card` }
+              className="recomendation-item"
             >
-              <img
-                width="150px"
-                data-testid={ `${index}-card-img` }
-                src={ food.strMealThumb }
-                alt={ `food-${index}` }
-              />
-              <h2
-                data-testid={ `${index}-card-name` }
+              <button
+                type="button"
+                // tabIndex={ 0 } // Lint issue
+                key={ food.idMeal }
+                onClick={ () => {
+                  setMealID(food.idMeal);
+                  history.push(`/foods/${food.idMeal}`);
+                } }
               >
-                {food.strMeal}
+                <img
+                  width="150px"
+                  data-testid={ `${index}-card-img` }
+                  src={ food.strMealThumb }
+                  alt={ `food-${index}` }
+                />
+                <h2
+                  data-testid={ `${index}-recomendation-title` }
+                >
+                  {food.strMeal}
 
-              </h2>
-            </button>
-          </div>
-        )
-      )) }
+                </h2>
+              </button>
+            </div>
+          )
+        )) }
+      </div>
     </div>
   );
 }
