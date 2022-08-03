@@ -2,7 +2,7 @@ import React from 'react';
 
 function MessageLinkCopied() {
   return (
-    <span>Link copied!</span>
+    <span className="ml-4">Link copied!</span>
   );
 }
 

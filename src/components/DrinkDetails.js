@@ -94,80 +94,106 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
   return (
     <div>
       { drinkDetails && drinkDetails.map((item, index) => (
-        <div key={ index }>
-          <img
-            src={ item.strDrinkThumb }
-            alt={ item.strDrink }
-            data-testid="recipe-photo"
-            className="recipe-photo"
-          />
-          <div id="topper">
-            <h3 data-testid="recipe-title">{item.strDrink}</h3>
-            <div>
-              <button
-                type="button"
-                className="details-btn"
-                data-testid="share-btn"
-                onClick={ copyToClipboard }
+        <div
+          key={ index }
+          className="flex flex-wrap justify-center items-center min-h-max mt-24"
+        >
+          <div className="flex flex-col w-11/12 bg-[#E32929] items-center justify-center">
+            <img
+              src={ item.strDrinkThumb }
+              alt={ item.strDrink }
+              data-testid="recipe-photo"
+              className="w-100 h-48 object-cover"
+            />
+            <div className="flex flex-col ml-4 mt-2 items-center justify-center">
+              <h3
+                data-testid="recipe-title"
+                className="mb-3 text-white"
               >
-                <img
-                  src={ shareIcon }
-                  alt="Profile Icon"
-                />
-              </button>
-              { isFavorite === false ? (
-                <button
-                  type="button"
-                  className="details-btn"
-                  data-testid="favorite-btn"
-                  src={ whiteHeartIcon }
-                  onClick={ addFav }
-                >
-                  <img
+                {item.strDrink}
+
+              </h3>
+              <div className="mb-2">
+                { isFavorite === false ? (
+                  <button
+                    type="button"
+                    className="details-btn"
+                    data-testid="favorite-btn"
                     src={ whiteHeartIcon }
-                    alt="Profile Icon"
-                  />
-                </button>
-              ) : (
+                    onClick={ addFav }
+                  >
+                    <img
+                      src={ whiteHeartIcon }
+                      alt="Profile Icon"
+                      className="mr-1 w-7"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="details-btn"
+                    data-testid="favorite-btn"
+                    src={ blackHeartIcon }
+                    onClick={ removeFav }
+                  >
+                    <img
+                      src={ blackHeartIcon }
+                      alt="Profile Icon"
+                      className="mr-1 w-7"
+                    />
+                  </button>
+                )}
                 <button
                   type="button"
                   className="details-btn"
-                  data-testid="favorite-btn"
-                  src={ blackHeartIcon }
-                  onClick={ removeFav }
+                  data-testid="share-btn"
+                  onClick={ copyToClipboard }
                 >
                   <img
-                    src={ blackHeartIcon }
+                    src={ shareIcon }
                     alt="Profile Icon"
+                    className="ml-1 w-7"
                   />
                 </button>
-              )}
-              {
-                isCopied && <MessageLinkCopied />
-              }
+                {
+                  isCopied && <MessageLinkCopied />
+                }
+              </div>
+              <p
+                data-testid="recipe-category"
+                className="text-white"
+              >
+                {item.strAlcoholic}
+
+              </p>
             </div>
           </div>
-          <p data-testid="recipe-category">{item.strAlcoholic}</p>
           {/* cada ingrediente deve ter um data-testid="${index}-ingredient-name-and-measure" */}
-          <ul>
-            {drinkIng.map((detail, i) => (
-              <li
-                key={ i }
-                data-testid={ `${i}-ingredient-name-and-measure` }
-              >
-                {`${detail.ingredient}: ${detail.measure}`}
+          <div className="mt-14 bg-[#FF611D] p-6 text-center mb-14 rounded-lg text-white">
+            <ul className="mt-2">
+              {drinkIng.map((detail, i) => (
+                <li
+                  key={ i }
+                  data-testid={ `${i}-ingredient-name-and-measure` }
+                >
+                  {`${detail.ingredient}: ${detail.measure}`}
 
-              </li>
-            ))}
-          </ul>
-          <p data-testid="instructions">{item.strInstructions}</p>
-          {/* <div data-testid="${index}-recomendation-card">
-            {item.strRecomendation}
-          </div> */}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p
+            data-testid="instructions"
+            className="w-60 text-center ml-4 mb-14 mt-10"
+          >
+            {item.strInstructions}
+
+          </p>
           <button
             type="button"
             data-testid="start-recipe-btn"
-            className="start-recipe-btn"
+            className="fixed bottom-0 bg-[#FF611D] pr-12 pl-12 pt-2 pb-2 text-white
+            rounded"
             onClick={ startRecipeBtn }
           >
             { isInProgress
@@ -175,12 +201,13 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
           </button>
         </div>
       )) }
-      <div className="recomendation-container">
+      <div className="flex flex-wrap justify-center mb-20 mt-14">
+        <br />
         { dataFoods && dataFoods.map((food, index) => (
           index < SEIS && (
             <div
               data-testid={ `${index}-recomendation-card` }
-              className="recomendation-item"
+              className="recomendation-container"
             >
               <button
                 type="button"
@@ -192,17 +219,17 @@ function DrinkDetails({ recipeID, startRecipeBtn }) {
                 } }
               >
                 <img
-                  width="150px"
+                  className="w-32"
                   data-testid={ `${index}-card-img` }
                   src={ food.strMealThumb }
                   alt={ `food-${index}` }
                 />
-                <h2
+                <h4
                   data-testid={ `${index}-recomendation-title` }
                 >
                   {food.strMeal}
 
-                </h2>
+                </h4>
               </button>
             </div>
           )

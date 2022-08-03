@@ -31,30 +31,35 @@ function Profile() {
   return (
     <div id="profile-page">
       <Header />
-      <h3 data-testid="profile-email">
-        {getEmail()}
-      </h3>
-      <button
-        data-testid="profile-done-btn"
-        type="button"
-        onClick={ () => { history.push('/done-recipes'); } }
-      >
-        Done Recipes
-      </button>
-      <button
-        data-testid="profile-favorite-btn"
-        type="button"
-        onClick={ () => { history.push('/favorite-recipes'); } }
-      >
-        Favorite Recipes
-      </button>
-      <button
-        data-testid="profile-logout-btn"
-        type="button"
-        onClick={ handleClick }
-      >
-        Logout
-      </button>
+      <div className="flex flex-col items-center mt-4">
+        <h3 data-testid="profile-email" className="mb-8">
+          {getEmail()}
+        </h3>
+        <button
+          data-testid="profile-done-btn"
+          type="button"
+          className="bg-[#FF611D] pt-2 pb-2 pl-6 pr-6 rounded-md mb-6 w-80"
+          onClick={ () => { history.push('/done-recipes'); } }
+        >
+          Done Recipes
+        </button>
+        <button
+          data-testid="profile-favorite-btn"
+          type="button"
+          className="bg-[#FF611D] pt-2 pb-2 pl-6 pr-6 rounded-md mb-6 w-80"
+          onClick={ () => { history.push('/favorite-recipes'); } }
+        >
+          Favorite Recipes
+        </button>
+        <button
+          data-testid="profile-logout-btn"
+          className="bg-black pt-2 pb-2 pl-6 pr-6 rounded-md mb-6 w-60 text-white"
+          type="button"
+          onClick={ handleClick }
+        >
+          Logout
+        </button>
+      </div>
       <Footer />
     </div>
 

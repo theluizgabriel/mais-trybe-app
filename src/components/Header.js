@@ -20,16 +20,16 @@ function Header() {
   };
 
   return (
-    <header className="header">
+    <header className="pt-4 bg-[#e32929] text-center pb-2">
       <h1
         data-testid="page-title"
-        className="Title"
+        className="text-center text-white"
       >
         {title}
       </h1>
       <button
         type="button"
-        className="header-btn"
+        className="header-btn mt-4"
         onClick={ () => { history.push('/profile'); } }
       >
         <img

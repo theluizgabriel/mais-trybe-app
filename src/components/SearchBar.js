@@ -46,51 +46,59 @@ function SearchBar() {
   };
 
   return (
-    <>
+    <div
+      className="flex justify-center mt-2 pb-2 bg-[#E32929] items-center
+      justify-around w-full"
+    >
       <input
         type="text"
         name="search"
+        placeholder="Type a text"
         id="search-input"
+        className="w-40 ml-4 h-8"
         data-testid="search-input"
         value={ valueSearch.search }
         onChange={ handleChange }
       />
-      <label htmlFor="ingredient-search-radio">
-        <input
-          data-testid="ingredient-search-radio"
-          type="radio"
-          id="ingredient-search-radio"
-          name="radio"
-          value="ingredient"
-          onChange={ handleChange }
-          defaultChecked
-        />
-        Ingredient
-      </label>
-      <label htmlFor="name-search-radio">
-        <input
-          data-testid="name-search-radio"
-          type="radio"
-          id="name-search-radio"
-          name="radio"
-          value="name"
-          onChange={ handleChange }
-        />
-        Name
-      </label>
-      <label htmlFor="first-letter-search-radio">
-        <input
-          data-testid="first-letter-search-radio"
-          type="radio"
-          id="first-letter-search-radio"
-          name="radio"
-          value="first-letter"
-          onChange={ handleChange }
-        />
-        First letter
-      </label>
+      <div className="flex flex-col text-left">
+        <label htmlFor="ingredient-search-radio" className="text-slate-200">
+          <input
+            data-testid="ingredient-search-radio"
+            type="radio"
+            id="ingredient-search-radio"
+            name="radio"
+            value="ingredient"
+            onChange={ handleChange }
+            defaultChecked
+          />
+          Ingredient
+        </label>
+        <label htmlFor="name-search-radio" className="text-slate-200">
+          <input
+            data-testid="name-search-radio"
+            type="radio"
+            id="name-search-radio"
+            name="radio"
+            value="name"
+            onChange={ handleChange }
+          />
+          Name
+        </label>
+        <label htmlFor="first-letter-search-radio" className="text-slate-200">
+          <input
+            data-testid="first-letter-search-radio"
+            type="radio"
+            id="first-letter-search-radio"
+            name="radio"
+            value="first-letter"
+            onChange={ handleChange }
+          />
+          First letter
+        </label>
+      </div>
       <button
         type="button"
+        className="bg-[#FF611D] p-2 mr-2 text-white rounded"
         data-testid="exec-search-btn"
         onClick={ handleButton }
       >
@@ -98,7 +106,7 @@ function SearchBar() {
 
       </button>
 
-    </>
+    </div>
   );
 }
 

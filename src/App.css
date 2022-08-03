@@ -48,12 +48,8 @@ body {
   text-align: center;
 }
 
-.Title {
-  text-align: center;
-}
-
 .header-btn {
-  background-color: #08cc6c;
+  background-color: #ff611d;
   border: none;
   border-radius: 100%;
   margin: 5px;
@@ -70,7 +66,9 @@ body {
   border-radius: 13px;
   margin: 5px 7px;
   padding: 5px;
-  width: 30%;
+  width: 45%;
+  background-color: #ff611d;
+  color: white;
 }
 
 .recipes {
@@ -82,7 +80,7 @@ body {
 .recipe-card {
   align-items: center;
   border-radius: 13px;
-  box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.7);
+  box-shadow: 2px 2px 7px #8b8b8b;
   display: flex;
   flex-direction: column;
   margin: 10px;
@@ -106,22 +104,19 @@ body {
 
 /* .search-bar */
 .footer {
-  background-color: #d6d6d6;
+  display: flex;
+  justify-content: space-around;
+  background-color: #E32929;
   bottom: 0;
   padding: 10px;
   position: fixed;
   width: 100%;
 }
 
-.recipe-photo {
-  width: 300px;
-}
-
 .recomendation-container {
-  border: white solid;
+  border: 3px rgb(227, 41, 41) solid;
   display: flex;
   overflow: hidden;
-  width: 420px;
 }
 
 .recomendation-item {

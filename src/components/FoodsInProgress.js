@@ -148,88 +148,124 @@ function FoodsInProgress({ currentId }) {
   };
 
   return (
-    <div>
+    <div className="text-center">
       { mealDetails && mealDetails.map((item, index) => (
-        <div key={ index }>
-          <img
-            src={ item.strMealThumb }
-            alt={ item.strMeal }
-            data-testid="recipe-photo"
-          />
-          <h3 data-testid="recipe-title">{item.strMeal}</h3>
-          <button
-            type="button"
-            className="details-btn"
-            onClick={ copyToClipboard }
-            data-testid="share-btn"
-          >
+        <div
+          key={ index }
+          className="flex flex-wrap justify-center items-center min-h-max
+        mt-24"
+        >
+          <div className="flex flex-col w-11/12 bg-[#E32929] items-center justify-center">
             <img
-              src={ shareIcon }
-              alt="Share"
+              src={ item.strMealThumb }
+              alt={ item.strMeal }
+              data-testid="recipe-photo"
+              className="w-100 h-48 object-cover"
             />
-          </button>
-          { isFavorite === false ? (
-            <button
-              type="button"
-              className="details-btn"
-              data-testid="favorite-btn"
-              src={ whiteHeartIcon }
-              onClick={ addFav }
+            <div
+              className="flex flex-col ml-4 mt-2 items-center justify-center"
             >
-              <img
-                src={ whiteHeartIcon }
-                alt="Profile Icon"
-              />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="details-btn"
-              data-testid="favorite-btn"
-              src={ blackHeartIcon }
-              onClick={ removeFav }
-            >
-              <img
-                src={ blackHeartIcon }
-                alt="Profile Icon"
-              />
-            </button>
-          )}
-          {isCopied && <MessageLinkCopied />}
-          <p data-testid="recipe-category">{item.strCategory}</p>
-          <ul>
-            {mealIng.map((detail, i) => (
-              <div
-                key={ i }
-                data-testid={ `${i}-ingredient-step` }
+              <h3
+                data-testid="recipe-title"
+                className="mb-3 text-white"
               >
-                <li>
-                  <input
-                    type="checkbox"
-                    name={ detail.ingredient }
-                    onChange={ pushCheck }
-                    checked={ checkedHandle(detail.ingredient) }
-                    className="ingredients"
-                  />
-                  <label htmlFor={ detail.ingredient }>
-                    {`${detail.ingredient}: ${detail.measure}`}
-                  </label>
-                </li>
-              </div>
-            ))}
-          </ul>
-          <p data-testid="instructions">{item.strInstructions}</p>
-          <button
-            type="button"
-            data-testid="finish-recipe-btn"
-            disabled={ isFinishButtonDisabled }
-            onClick={ finishButton }
-          >
-            Finish
+                {item.strMeal}
 
-          </button>
+              </h3>
+              <div className="mb-2">
+                { isFavorite === false ? (
+                  <button
+                    type="button"
+                    data-testid="favorite-btn"
+                    src={ whiteHeartIcon }
+                    onClick={ addFav }
+                  >
+                    <img
+                      src={ whiteHeartIcon }
+                      alt="Profile Icon"
+                      className="mr-1 w-7"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    data-testid="favorite-btn"
+                    src={ blackHeartIcon }
+                    onClick={ removeFav }
+                  >
+                    <img
+                      src={ blackHeartIcon }
+                      alt="Profile Icon"
+                      className="mr-1 w-7"
+                    />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="details-btn"
+                  onClick={ copyToClipboard }
+                  data-testid="share-btn"
+                >
+                  <img
+                    src={ shareIcon }
+                    alt="Share"
+                    className="ml-1 w-7"
+                  />
+                </button>
+                {isCopied && <MessageLinkCopied />}
+              </div>
+              <p
+                data-testid="recipe-category"
+                className="mb-3 text-white"
+              >
+                {item.strCategory}
+
+              </p>
+            </div>
+          </div>
+          <div className="mt-14 bg-[#FF611D] p-6 text-center mb-14 rounded-lg text-white">
+            <ul>
+              {mealIng.map((detail, i) => (
+                <div
+                  key={ i }
+                  data-testid={ `${i}-ingredient-step` }
+                >
+                  <li>
+                    <input
+                      type="checkbox"
+                      name={ detail.ingredient }
+                      onChange={ pushCheck }
+                      checked={ checkedHandle(detail.ingredient) }
+                      className="ingredients"
+                    />
+                    <label htmlFor={ detail.ingredient }>
+                      {`${detail.ingredient}: ${detail.measure}`}
+                    </label>
+                  </li>
+                </div>
+              ))}
+            </ul>
+          </div>
+          <p
+            data-testid="instructions"
+            className="w-60 text-center ml-4 mb-14 mt-10"
+          >
+            {item.strInstructions}
+
+          </p>
         </div>
       )) }
+      <button
+        type="button"
+        data-testid="finish-recipe-btn"
+        disabled={ isFinishButtonDisabled }
+        onClick={ finishButton }
+        className="bottom-0 bg-[#FF611D] pr-12 pl-12 pt-2 pb-2 text-white
+            rounded"
+      >
+        Finish
+
+      </button>
     </div>
   );
 }
